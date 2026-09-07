@@ -1,0 +1,22 @@
+---
+const { current } = Astro.props;
+const links = [
+  ["Home", "/"],
+  ["Services", "/services"],
+  ["Wholesale", "/wholesale"],
+  ["Claims", "/claims"],
+  ["About", "/about"],
+  ["Contact", "/contact"],
+];
+---
+<header class="nav" id="nav">
+  <a href="/" aria-label="Airborne Dent Repair — home"><span class="logo-mark nav-logo"></span></a>
+  <nav>
+    <ul class="nav-links">
+      {links.map(([label, href]) => (
+        <li><a href={href} aria-current={label === current ? 'page' : undefined}>{label}</a></li>
+      ))}
+    </ul>
+  </nav>
+  <a class="nav-call" href="tel:+16822260543">682-226-0543</a>
+</header>

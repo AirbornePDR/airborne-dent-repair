@@ -1,0 +1,81 @@
+---
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props { title: string; description: string; nav: string; css: string; }
+const { title, description, nav, css } = Astro.props;
+
+const BUSINESS = {
+  "@context": "https://schema.org",
+  "@type": "AutoBodyShop",
+  name: "Airborne Dent Repair",
+  description:
+    "Veteran owned paintless dent and hail damage repair, windshield replacement and XPEL window tint in Gunter, Texas.",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "489 Reed Ln, Unit 2",
+    addressLocality: "Gunter", addressRegion: "TX",
+    postalCode: "75058", addressCountry: "US",
+  },
+  telephone: "+1-682-226-0543",
+  faxNumber: "+1-833-907-5267",
+  email: "airbornepdr@gmail.com",
+  areaServed: ["Gunter TX", "Dallas–Fort Worth metroplex", "North Texas"],
+  openingHoursSpecification: [{
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
+    opens: "09:00", closes: "19:00",
+  }],
+  makesOffer: ["Hail damage repair","Paintless dent repair","Windshield replacement","XPEL window tint"],
+};
+---
+<!doctype html>
+<html lang="en" data-css={css}>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site ?? 'https://example.com')} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap" />
+  <script type="application/ld+json" set:html={JSON.stringify(BUSINESS)} />
+</head>
+<body>
+  <Nav current={nav} />
+  <slot />
+  <Footer />
+  <script>
+    const nav = document.getElementById('nav');
+    const onScroll = () => nav?.classList.toggle('stuck', window.scrollY > 24);
+    onScroll(); addEventListener('scroll', onScroll, { passive: true });
+
+    const yr = document.getElementById('yr');
+    if (yr) yr.textContent = String(new Date().getFullYear());
+
+    document.querySelectorAll('[data-ba]').forEach((ba) => {
+      const range = ba.querySelector('.ba-range');
+      const set = () => ba.style.setProperty('--split', range.value + '%');
+      range.addEventListener('input', set); set();
+    });
+
+    const els = document.querySelectorAll('.rv');
+    if (!('IntersectionObserver' in window) ||
+        matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      els.forEach((e) => e.classList.add('in'));
+    } else {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((en) => {
+          if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+        });
+      }, { rootMargin: '0px 0px -8% 0px', threshold: 0.06 });
+      els.forEach((e) => io.observe(e));
+    }
+  </script>
+</body>
+</html>

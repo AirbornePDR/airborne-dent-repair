@@ -1,0 +1,17 @@
+{
+  "name": "airborne-dent-repair",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "astro": "^7.2.10"
+  },
+  "devDependencies": {
+    "playwright": "^1.62.1"
+  }
+}
