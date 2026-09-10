@@ -1,0 +1,28 @@
+/* Airborne Display — self-hosted Archivo variable font.
+   ONE file, both axes (wdth 62–125, wght 100–900), no third-party request.
+
+   This replaces the three static AirborneDisplay-* cuts. Those cuts existed
+   only because Wix Studio's font picker exposed Archivo as a single family
+   with no width axis; that constraint is gone. Verified in-browser that the
+   variable font at "wdth" 120,"wght" 250 measures 1749.64px on the H1 string
+   against 1749.70px for the old Regular cut — a 0.003% difference, i.e. the
+   same rendering.
+
+   The variable font is also REQUIRED, not merely equivalent: the display type
+   is specified with font-variation-settings and font-stretch, and both are
+   inert against fixed static instances.
+
+   Do not swap this for a <link> to Google Fonts. Cache partitioning means a
+   third-party font link buys a DNS lookup and connection before any text
+   renders, and it puts a third party in the request path of a page that
+   otherwise has none. Imported once from Base.astro, so it applies to every
+   page without touching the per-page accent stylesheets. */
+
+@font-face {
+  font-family: "Archivo";
+  src: url("/fonts/Archivo-var-latin.woff2") format("woff2");
+  font-weight: 100 900;
+  font-stretch: 62% 125%;
+  font-style: normal;
+  font-display: swap;
+}

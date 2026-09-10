@@ -24,7 +24,7 @@ src/components/Footer.astro contact block, hours, address
 src/pages/*.astro           one file per URL
 src/styles/                 home.css · retail.css · wholesale.css
 public/img/                 photos (real jobs only — see rules)
-public/fonts/               Airborne Display woff2
+public/fonts/               Archivo variable woff2 (latin subset)
 ```
 
 ### Three stylesheets, imported per page — this is deliberate
@@ -34,12 +34,36 @@ The pages share class names (`.svc`, `.chip`, `.cross`) but differ in accent col
 its own sheet so they never collide. Don't "helpfully" merge them into one global
 stylesheet — it will break the accent system.
 
-### The fonts are custom cuts, not a Google Fonts family
+### The font is a self-hosted variable font, never a Google Fonts link
 
-`AirborneDisplay-{Light,Regular,Medium}.woff2` are static instances cut from the
-Archivo variable font at `wdth 118–120 / wght 200–300`. The width is the whole point:
-stock Archivo is ~18% narrower on the same string and the headlines lose their
-character. Never swap these for a `<link>` to Google Fonts.
+`public/fonts/Archivo-var-latin.woff2` is the Archivo variable font, latin subset,
+carrying both axes (`wdth 62–125`, `wght 100–900`). It is declared once in
+`src/styles/fonts.css`, imported from `Base.astro`, and preloaded in the head.
+
+The width is the whole point: stock Archivo at default width is ~18% narrower on the
+same string and the headlines lose their character. The display type is specified with
+`font-variation-settings` and `font-stretch`, and **those declarations only work
+against a variable font** — they are inert against fixed static instances.
+
+**Never link Google Fonts.** Cache partitioning killed the shared-cache argument years
+ago, so a third-party font link now only buys a DNS lookup and connection before any
+text renders. Self-hosting also keeps third-party requests at zero, which keeps the
+privacy policy short.
+
+Two implementation details that are easy to get wrong:
+
+- Use `format("woff2")`. `format("woff2-variations")` is interim syntax that never
+  made the spec; engines that do not recognise it skip the source silently.
+- The preload **must** carry `crossorigin`, even though the file is same-origin.
+  Fonts are always fetched in anonymous CORS mode; without it the preload does not
+  match the real request and the file downloads twice.
+
+This replaced three static cuts (`AirborneDisplay-{Light,Regular,Medium}.woff2`) that
+existed only because Wix Studio's font picker exposed Archivo as a single family with
+no width axis. Verified in-browser before the swap: the variable font at
+`"wdth" 120,"wght" 250` measures 1749.64px on the H1 string against 1749.70px for the
+old Regular cut — a 0.003% difference. Do not reintroduce static cuts; carrying both
+is how they drift apart.
 
 ## Brand tokens
 
@@ -104,6 +128,12 @@ These come from the client brief. They are not style preferences.
 **Explicitly NOT true:** the owner does not hold the title "Regional Claims Liaison."
 The shop *works with* one. An earlier brief got this wrong. No copy may claim the
 title for him.
+
+The homepage step 02 previously claimed it and now reads "We document the damage, talk
+to your adjuster, and manage the file so you don't have to." — true without needing
+anyone to confirm anything. A sharper line is available **only** if the owner states
+the exact relationship in writing: "works directly with" could mean staff, a
+contractor, or a contact on the carrier side, and those read very differently.
 
 ## State of the build
 
