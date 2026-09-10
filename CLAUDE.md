@@ -149,7 +149,10 @@ contractor, or a contact on the carrier side, and those read very differently.
 - Estimate form with photo upload (retail → `airbornepdr@gmail.com`;
   wholesale/claims → `Claimsairbornedentrepair@gmail.com`). Needs a backend because
   of the photo upload. Needs spam protection — honeypot + rate limit is enough at
-  this volume; skip reCAPTCHA unless spam actually appears.
+  this volume; skip reCAPTCHA unless spam actually appears. Also needs a privacy
+  policy link, and **a named person who monitors that inbox after a storm** — that
+  question used to live in an on-page build note on /wholesale, which has been
+  removed, so it is recorded here instead.
 - Privacy policy + terms. **Required before any form collects data.**
 - Four photos still have hash filenames and should be renamed descriptively for
   image SEO: `img-01601d4a77.jpeg`, `img-d658fbaced.jpeg`, `img-ea3b4a7cf7.jpeg`,
