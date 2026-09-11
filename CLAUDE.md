@@ -222,7 +222,10 @@ on tablet, or a sixth step — not a mechanical fix.
 
 - Claims page
 - **Photo upload on the forms.** Web3Forms Pro only. Both forms currently tell people
-  to email photos instead.
+  to email photos instead. **Shipping this makes the privacy policy false** — the
+  sentence "Neither form accepts file or photo uploads" has to change in the same
+  commit, along with the form copy telling people to email them. See the tripwire
+  table under *Privacy and terms*.
 - **The claims access key.** The wholesale form is built and tested but shows its
   "not connected" notice until the key is pasted into `src/data/web3forms.ts`.
 - **A named person who monitors the claims inbox after a storm.** Still unanswered.
@@ -281,6 +284,21 @@ for deletion. Nobody has had them reviewed by an attorney. If the owner wants th
 this is the draft to hand over. Keep them true: **if the forms change what they
 collect, or a new third party is added, these pages change in the same commit.**
 
+**Named tripwires.** These are sentences that are true today and become lies the
+moment a specific feature ships. Each one changes in the same commit as the change
+that breaks it, not in a follow-up:
+
+| Page | Sentence | Broken by |
+|---|---|---|
+| `/privacy` | "Neither form accepts file or photo uploads." | **Shipping photo upload.** |
+| `/privacy` | "We have not added Google Analytics or any other tracking or advertising service." | Adding any analytics, including Vercel Analytics, which is off by default but one toggle away. |
+| `/privacy` | The two lists of exact form fields. | Adding, renaming or removing any field on either form. |
+| `/terms` | "Photographs of repairs on this site are of work carried out." | Publishing a repair photo that is not this shop's job. Rule 2 already forbids that. |
+
+The first one is the live risk: photo upload is the next thing anyone will build on
+these forms, both forms currently advertise that they do not take attachments, and
+the privacy policy states it as fact.
+
 ## The before/after sliders
 
 Five of them: two on `/`, one each on `/hail-damage-repair`, `/window-tint` and
@@ -316,6 +334,21 @@ right.** Test on the device.
 
 ## Working conventions
 
+- **Choose fixtures to break the code, not to confirm it.** The email validator
+  shipped with a regex whose "not whitespace, not at-sign" character class had lost
+  its backslash — it had been written `[^\s@]` and became `[^s@]`, which is "not the
+  letter s, not an at-sign". It silently rejected every address whose local part
+  started with "s". Two forms ran the same validator; the one seeded with `jane@`
+  passed and the one seeded with `sam@` failed. Nothing about that was designed —
+  had both fixtures been `jane@`, the bug would have shipped with a green suite.
+  Pick inputs that probe the boundary the code actually draws: the character class,
+  the empty string, the duplicate key, the value that snaps to the step. A fixture
+  that only demonstrates the happy path is decoration.
+- **Escapes do not survive being written through a generator script.** Both times a
+  backslash has gone missing in this project, it was because the edit was applied by
+  a throwaway Node script that built the replacement in a template literal. Edit
+  files containing regexes or escapes directly, and grep the result afterwards to
+  confirm the backslash is still there.
 - Verify before claiming done. `npm run build` must succeed. For layout changes,
   actually check the rendered page — Playwright headless at 390px and 1440px,
   asserting `document.documentElement.scrollWidth === window.innerWidth`. Horizontal
