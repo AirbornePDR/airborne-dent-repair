@@ -276,7 +276,22 @@ section{padding-block:var(--rhythm)}
 
 /* ---------- before / after ---------- */
 .ba-half{max-width:min(100%,860px)}
-.ba{position:relative;overflow:hidden;user-select:none;border:1px solid var(--hair);background:var(--ink-2);touch-action:pan-y}
+.ba{
+  position:relative;overflow:hidden;border:1px solid var(--hair);background:var(--ink-2);
+  -webkit-user-select:none;user-select:none;
+  /* pan-y, not none: a vertical swipe that starts on the photo still scrolls the
+     page, while a sideways drag is left for the slider instead of being eaten as
+     a scroll gesture. -webkit-tap-highlight-color kills the grey flash iOS paints
+     over the image on touch. */
+  touch-action:pan-y;-webkit-tap-highlight-color:transparent;
+}
+/* Set by the script once the pointer driver is attached. The range keeps working
+   for keyboard, but it must not swallow the touch -- dragging it needs the
+   gesture to start on its invisible thumb, which is the whole bug. */
+.ba-pointer{cursor:ew-resize}
+.ba-pointer .ba-range{pointer-events:none}
+/* the range is opacity:0, so its own focus ring is invisible; show it on the frame */
+.ba:has(.ba-range:focus-visible){outline:1px solid var(--olive-lift);outline-offset:3px}
 .ba-feature .ba{aspect-ratio:1200/769}
 .ba-layer{position:absolute;inset:0;display:flex;align-items:flex-end;background-position:center;background-size:cover;background-repeat:no-repeat}
 .ba-after{clip-path:inset(0 0 0 var(--split,50%));justify-content:flex-end}
@@ -289,7 +304,7 @@ section{padding-block:var(--rhythm)}
   content:"";position:absolute;top:50%;left:50%;width:44px;height:44px;
   transform:translate(-50%,-50%);border:1px solid var(--bone);background:rgba(2,3,3,.35);backdrop-filter:blur(2px);
 }
-.ba-range{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:ew-resize;-webkit-appearance:none;appearance:none;background:transparent}
+.ba-range{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:ew-resize;-webkit-appearance:none;appearance:none;background:transparent;touch-action:pan-y}
 .ba-range::-webkit-slider-thumb{-webkit-appearance:none;width:56px;height:100%}
 .ba-range::-moz-range-thumb{width:56px;height:100%;border:0;background:transparent}
 .ba-cap{display:flex;justify-content:space-between;gap:1rem;margin-top:.65rem;font-size:.76rem;color:var(--bone-dim)}

@@ -59,10 +59,68 @@ const BUSINESS = {
     const yr = document.getElementById('yr');
     if (yr) yr.textContent = String(new Date().getFullYear());
 
+    // Before/after sliders.
+    //
+    // The <input type="range"> stays, because it is what makes these operable by
+    // keyboard and what a screen reader announces. But it is NOT what handles
+    // pointer input any more. A range input is dragged by its thumb, and on iOS
+    // Safari a touch that does not land on the thumb does nothing at all -- no
+    // jump to the tap, no drag. Here the thumb is invisible and 56px wide inside
+    // an image that is ~350px on a phone, so almost every touch missed it. That
+    // is the reported "works on desktop, dead on mobile": a mouse gets a click on
+    // the track turned into a jump, a finger does not.
+    //
+    // So the container takes the pointer input and writes the value back into the
+    // range. One code path for mouse, touch and pen, and a touch anywhere on the
+    // image works.
     document.querySelectorAll('[data-ba]').forEach((ba) => {
       const range = ba.querySelector('.ba-range');
-      const set = () => ba.style.setProperty('--split', range.value + '%');
-      range.addEventListener('input', set); set();
+      if (!range) return;
+      const paint = () => ba.style.setProperty('--split', range.value + '%');
+      range.addEventListener('input', paint);
+      paint();
+
+      // No PointerEvent means something very old; leave the native range in charge.
+      if (!window.PointerEvent) return;
+      ba.classList.add('ba-pointer');
+
+      const setFromX = (clientX) => {
+        const r = ba.getBoundingClientRect();
+        if (!r.width) return;
+        const pct = ((clientX - r.left) / r.width) * 100;
+        range.value = Math.max(0, Math.min(100, pct));
+        paint();
+      };
+
+      let id = null, startX = 0, dragging = false;
+
+      ba.addEventListener('pointerdown', (e) => {
+        if (e.button > 0) return;
+        id = e.pointerId; startX = e.clientX; dragging = false;
+        try { ba.setPointerCapture(id); } catch (err) {}
+        // A mouse press has no competing gesture, so it can move the handle at
+        // once. A finger might be starting a vertical scroll, so wait until the
+        // drag is actually sideways before grabbing anything -- otherwise the
+        // handle lurches every time someone scrolls past the photo.
+        if (e.pointerType === 'mouse') { dragging = true; setFromX(e.clientX); }
+      });
+
+      ba.addEventListener('pointermove', (e) => {
+        if (e.pointerId !== id) return;
+        if (!dragging && Math.abs(e.clientX - startX) < 4) return;
+        dragging = true;
+        setFromX(e.clientX);
+      });
+
+      const release = (e) => {
+        if (e.pointerId !== id) return;
+        if (!dragging) setFromX(e.clientX); // a tap moves the handle to the tap
+        try { ba.releasePointerCapture(id); } catch (err) {}
+        id = null; dragging = false;
+      };
+      ba.addEventListener('pointerup', release);
+      // fires when the browser takes the gesture for scrolling; leave the value alone
+      ba.addEventListener('pointercancel', () => { id = null; dragging = false; });
     });
 
     // Autoplaying loops are motion too. CSS cannot stop a video that has

@@ -237,6 +237,39 @@ on tablet, or a sixth step — not a mechanical fix.
 verification, the open `[CONFIRM]` answers, owner portrait, windshield and door-ding
 before/after photos.
 
+## The before/after sliders
+
+Five of them: two on `/`, one each on `/hail-damage-repair`, `/window-tint` and
+`/wholesale`. Marked `[data-ba]`, wired in `Base.astro`.
+
+**The `<input type="range">` is for keyboard and screen readers only. It does not
+handle pointer input.** A range input is dragged by its thumb, and on iOS Safari a
+touch that misses the thumb does nothing at all — no jump to the tap, no drag. The
+thumb here is invisible and 56px wide inside an image about 350px across on a phone,
+so nearly every touch missed it. Desktop hid the problem because a mouse click on the
+track *is* turned into a jump. That asymmetry is the bug: "works on web, dead on
+mobile."
+
+So the container owns pointer input and writes the value back into the range. One
+path for mouse, touch and pen. Things worth not undoing:
+
+- `.ba` keeps `touch-action:pan-y`. Not `none` — a vertical swipe starting on the
+  photo still has to scroll the page.
+- Touch waits for ~4px of sideways movement before grabbing the handle, so scrolling
+  past a slider does not yank it. A mouse moves immediately, since nothing competes.
+- `.ba-pointer .ba-range{pointer-events:none}` is what stops the input swallowing the
+  touch. The class is added by the script, so if `PointerEvent` is missing the native
+  range is still in charge.
+- Keyboard still works through the range, and the focus ring is drawn on `.ba` via
+  `:has()` because the input itself is `opacity:0`.
+
+**This was fixed without a reproduction.** It does not reproduce in Chromium or in
+Playwright's WebKit, with touch emulation, at any width — both engines pass a tap and
+a drag against the old code. The fix removes the dependency on native range touch
+behaviour rather than patching an observed failure, so **if it still misbehaves on a
+real iPhone, the diagnosis above is wrong and the next person should not assume it is
+right.** Test on the device.
+
 ## Working conventions
 
 - Verify before claiming done. `npm run build` must succeed. For layout changes,
