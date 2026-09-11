@@ -238,6 +238,27 @@ on tablet, or a sixth step — not a mechanical fix.
 verification, the open `[CONFIRM]` answers, owner portrait, windshield and door-ding
 before/after photos.
 
+## The domain and everything that derives from it
+
+Live on **https://airbornedentrepair.com**; `www` 308s to the apex.
+
+`site` in `astro.config.mjs` is the **single source of truth**. It drives the
+canonical tag, `og:url`, the `url` in the JSON-LD business record, and every entry
+in the sitemap. Change it there and all four follow. `Base.astro` throws if it is
+unset rather than quietly emitting canonicals for a placeholder host.
+
+**The sitemap is generated, not hand-maintained.** `src/pages/sitemap.xml.ts`
+enumerates the real pages via `import.meta.glob`, so adding a page to `src/pages`
+puts it in the sitemap and deleting one removes it. The old hand-edited
+`public/sitemap.xml` is gone, and with it the step in "new page →" that everyone
+forgets. URLs carry a trailing slash to match what the canonical tags declare.
+
+**Page titles must use real characters, never HTML entities.** The `title` prop is
+a string, so `&mdash;` in it renders as the literal text "&mdash;" in the browser
+tab and in search results — every page but the home page shipped that way until the
+domain went live, and `/wholesale` also carried an uninterpreted `—`. Write
+"—" and "&" directly; Astro escapes them correctly on the way out.
+
 ## The two forms
 
 Retail estimate on `/contact` → `airbornepdr@gmail.com`. Wholesale & claims on

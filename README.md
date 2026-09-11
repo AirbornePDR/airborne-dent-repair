@@ -31,22 +31,31 @@ src/
   layouts/Base.astro       shell: <head>, JSON-LD schema, nav, footer, page scripts
   components/Nav.astro     top nav — edit the links array here, one place
   components/Footer.astro  contact block, hours, address
+  data/web3forms.ts        the two form access keys (public by design)
   pages/                   one .astro file per URL
     index.astro                    /
+    services.astro                 /services
     wholesale.astro                /wholesale
+    about.astro                    /about
+    contact.astro                  /contact        ← retail estimate form
     hail-damage-repair.astro       /hail-damage-repair
     paintless-dent-repair.astro    /paintless-dent-repair
     windshield-replacement.astro   /windshield-replacement
     window-tint.astro              /window-tint
+    privacy.astro                  /privacy
+    terms.astro                    /terms
+    sitemap.xml.ts                 /sitemap.xml    ← generated, not hand-edited
   styles/
     home.css        home page only
-    retail.css      the four service pages (olive accent)
+    retail.css      service, contact, about and legal pages (olive accent)
     wholesale.css   wholesale page (navy accent)
 public/
   img/       all photos
-  fonts/     Airborne Display (custom Archivo instances)
+  video/     the four shop and fleet clips
+  fonts/     Archivo-var-latin.woff2 (variable font, both axes)
   robots.txt
-  sitemap.xml
+scripts/
+  verify-forms.mjs         npm run verify:forms — drives both forms end to end
 ```
 
 ### Why three stylesheets instead of one
@@ -56,12 +65,17 @@ differs — olive on retail, navy on wholesale. Each page imports only its own
 sheet, so they never collide. If you add a page, import the sheet that matches
 its accent.
 
-### The fonts
+### The font
 
-`AirborneDisplay-{Light,Regular,Medium}.woff2` are static instances cut from the
-Archivo variable font at `wdth 118–120 / wght 200–300`. That width is what makes
-the headlines read the way they do — stock Archivo is ~18% narrower on the same
-string. Don't swap them for a Google Fonts link.
+`public/fonts/Archivo-var-latin.woff2` is the Archivo variable font, latin subset,
+carrying both axes (`wdth 62–125`, `wght 100–900`). Declared once in
+`src/styles/fonts.css`, preloaded in the head. That width is what makes the
+headlines read the way they do — stock Archivo is ~18% narrower on the same
+string, and `font-variation-settings` only works against a variable font.
+
+Don't swap it for a Google Fonts link, and don't reintroduce the three static cuts
+it replaced. See CLAUDE.md for the two implementation details that are easy to get
+wrong (`format("woff2")`, and `crossorigin` on the preload).
 
 ---
 
@@ -73,20 +87,21 @@ string. Don't swap them for a Google Fonts link.
 2. vercel.com → Add New → Project → import the repo.
 3. Vercel auto-detects Astro. Framework: Astro. Build: `npm run build`. Output: `dist`.
    Leave all of it as detected.
-4. Deploy. You get a `*.vercel.app` URL in about 40 seconds.
+4. Deploy. Production is https://airbornedentrepair.com; branch pushes get their own preview URL.
 
 **After that:** every `git push` to `main` redeploys automatically. Pushes to any
 other branch get their own preview URL — use one when you want the owner to look
 at something before it goes live.
 
-### Custom domain
+### Custom domain — done
 
-Buy the domain in the **owner's name**, on his card. Then in Vercel:
-Project → Settings → Domains → add it, and point the registrar's nameservers or
-A/CNAME records where Vercel tells you. Propagation is usually under an hour.
+Live on **https://airbornedentrepair.com**, with `www` returning a 308 to the apex.
 
-Then update `site:` in `astro.config.mjs` to the real domain — it drives the
-canonical tags and the sitemap. Rebuild and push.
+`site:` in `astro.config.mjs` is the single source of truth for the domain. It
+drives the canonical tag, `og:url`, the `url` in the JSON-LD business record, and
+every entry in the generated sitemap. Change it in one place and all of them
+follow. The build throws if it is ever unset, rather than quietly emitting
+canonicals for a placeholder host.
 
 ---
 
@@ -94,9 +109,13 @@ canonical tags and the sitemap. Rebuild and push.
 
 **Code side**
 
-- [ ] Four pages still to build: Services index, Claims, About, Contact
-- [ ] Estimate form (see below)
-- [ ] Privacy policy + terms pages — required before any form collects data
+- [x] Services, About and Contact pages — built
+- [x] Estimate form and wholesale/claims form — built (see below)
+- [x] Privacy policy + terms pages — built and linked from the footer
+- [x] Domain live on airbornedentrepair.com
+- [ ] Claims page — still to build, and pulled from the nav until it exists
+- [ ] Paste the wholesale/claims Web3Forms key into `src/data/web3forms.ts`;
+      that form shows a "not connected" notice until it lands
 - [ ] Rename the four leftover photos: `img-01601d4a77.jpeg`, `img-d658fbaced.jpeg`,
       `img-ea3b4a7cf7.jpeg`, `img-f518ef14c1.jpeg` (update the `<img src>` that
       references each; they're descriptive filenames for SEO, not cosmetics)
@@ -107,27 +126,35 @@ canonical tags and the sitemap. Rebuild and push.
 - [ ] **Google Business Profile.** Postal verification takes 5 days to 3 weeks.
       Nothing else on this list gates launch that long. For a shop that lives on
       local search, this matters more than the site does.
-- [ ] Domain purchase, in his name
-- [ ] The 8 open confirm answers
+- [ ] The remaining confirm answers
+- [ ] Whether the loaner partner may be named on the public site
+- [ ] A named person who watches the claims inbox after a storm — a form
+      delivering into an inbox nobody reads is worse than no form
 - [ ] Owner portrait
 - [ ] Windshield and door-ding before/after photos (two service pages have
       placeholder-quality galleries until these land)
 
 ---
 
-## The estimate form
+## The two forms
 
-Not built yet. When it is:
+Built, on **Web3Forms** (account under `airbornepdr@gmail.com`), posting from the
+browser — so the site is still fully static. No adapter, no SSR, no serverless
+function. Keep it that way.
 
-- Retail submissions → `airbornepdr@gmail.com`
-- Wholesale and claims → `Claimsairbornedentrepair@gmail.com`
-- Needs photo upload, so it needs a backend. Options: a Vercel serverless
-  function writing to Resend/Postmark, or a form service (Formspree, Basin) if
-  you'd rather not maintain one. Photo upload is the deciding factor — some
-  form services cap attachment size low.
-- Spam protection required. Honeypot field plus a rate limit is enough at this
-  volume; skip reCAPTCHA unless spam actually shows up.
-- Privacy policy and terms have to exist before it goes live.
+- Retail estimate on `/contact` → `airbornepdr@gmail.com`
+- Wholesale and claims on `/wholesale` → `Claimsairbornedentrepair@gmail.com`
+- Keys live in `src/data/web3forms.ts` and are **public by design** — they ship in
+  the HTML and name the destination inbox. A placeholder key renders a visible
+  "not connected" notice instead of a submit button, so a dead form can't ship
+  quietly.
+- Spam: the `botcheck` honeypot plus hCaptcha, both free tier.
+- **No photo upload** — that is Web3Forms Pro. Both forms say so and point at
+  email. Shipping it falsifies a sentence in the privacy policy; see the tripwire
+  table in CLAUDE.md before you build it.
+- `npm run verify:forms` drives both forms in Chromium and WebKit: markup,
+  accessibility, validation, the happy path, and every failure mode. Run it after
+  touching anything in the form path.
 
 ---
 

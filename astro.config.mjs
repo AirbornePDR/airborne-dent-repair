@@ -1,7 +1,8 @@
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  // Set this to the real domain once it's bought — it drives canonical URLs.
+  // Live domain. Single source of truth for canonical tags, og:url, the JSON-LD
+  // url and the generated sitemap. Changing it here changes all of them.
   site: 'https://airbornedentrepair.com',
   build: { inlineStylesheets: 'auto' },
 });

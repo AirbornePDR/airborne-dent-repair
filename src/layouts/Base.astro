@@ -10,10 +10,18 @@ import '../styles/fonts.css';
 interface Props { title: string; description: string; nav: string; css: string; forms?: boolean; }
 const { title, description, nav, css, forms = false } = Astro.props;
 
+// The live domain. Astro.site is set in astro.config.mjs and is the single source
+// of truth — no fallback host here on purpose. If site is ever unset the build
+// should fail loudly rather than quietly emitting canonicals for example.com.
+const SITE = Astro.site;
+if (!SITE) throw new Error('astro.config.mjs is missing `site` — canonical URLs and the sitemap depend on it.');
+const canonical = new URL(Astro.url.pathname, SITE).href;
+
 const BUSINESS = {
   "@context": "https://schema.org",
   "@type": "AutoBodyShop",
   name: "Airborne Dent Repair",
+  url: SITE.href,
   description:
     "Veteran owned paintless dent and hail damage repair, windshield replacement and XPEL window tint in Gunter, Texas.",
   address: {
@@ -41,10 +49,14 @@ const BUSINESS = {
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>{title}</title>
   <meta name="description" content={description} />
-  <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site ?? 'https://example.com')} />
+  <link rel="canonical" href={canonical} />
+  <meta property="og:url" content={canonical} />
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
   <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Airborne Dent Repair" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary_large_image" />
   <!-- Self-hosted variable font. crossorigin is REQUIRED even though this is
        same-origin: fonts are always fetched in anonymous CORS mode, and without
        it the preload will not match the real request and the file downloads twice. -->
