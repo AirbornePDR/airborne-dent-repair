@@ -257,6 +257,28 @@ tab and in search results — every page but the home page shipped that way unti
 domain went live, and `/wholesale` also carried an uninterpreted `—`. Write
 "—" and "&" directly; Astro escapes them correctly on the way out.
 
+## Calls to action
+
+The four service pages are the pattern: **`btn-solid` goes to a form, `btn-ghost`
+goes to `tel:`.** Nothing else is a button.
+
+- **A button never opens a mail client.** A plain address in a contact block or in
+  prose is fine; a button that launches Mail is not a call to action, it is an exit.
+  The estimate form is the intended path and email is the fallback behind it.
+- **An in-page anchor CTA must land on a section that actually contains a form.**
+  The home page shipped a hero button pointing at `#contact`, which was a closing
+  band with a phone number and no form in it, and a closing button that was a
+  `mailto:`. Both bypassed the estimate form completely, on the page that gets the
+  most traffic. Only `/wholesale` legitimately uses an anchor (`#account`), because
+  that section holds its form.
+- Every page except `/privacy` and `/terms` must offer at least one route to a
+  form. Those two are reference documents reached from the footer.
+- Phone links use the `tel:+1682...` E.164 form everywhere.
+
+`npm run verify:site` asserts the first three. They were checked by reintroducing
+each bug into the built output and confirming the suite went red — an assertion
+that has never failed is decoration.
+
 ## The two forms
 
 Retail estimate on `/contact` → `airbornepdr@gmail.com`. Wholesale & claims on

@@ -7,7 +7,9 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "verify:forms": "node scripts/verify-forms.mjs"
+    "verify:forms": "node scripts/verify-forms.mjs",
+    "verify:site": "node scripts/verify-site.mjs",
+    "verify": "npm run verify:forms && npm run verify:site"
   },
   "dependencies": {
     "astro": "^7.2.10"
