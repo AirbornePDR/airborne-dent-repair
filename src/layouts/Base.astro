@@ -3,8 +3,12 @@ import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import '../styles/fonts.css';
 
-interface Props { title: string; description: string; nav: string; css: string; }
-const { title, description, nav, css } = Astro.props;
+// forms: loads Web3Forms' client script, which only injects hCaptcha and sets their
+// public sitekey — it does not touch form submission, which the inline script below
+// handles. Set only on the two pages carrying a form, so every other page keeps
+// making zero third-party requests.
+interface Props { title: string; description: string; nav: string; css: string; forms?: boolean; }
+const { title, description, nav, css, forms = false } = Astro.props;
 
 const BUSINESS = {
   "@context": "https://schema.org",
@@ -51,6 +55,7 @@ const BUSINESS = {
   <Nav current={nav} />
   <slot />
   <Footer />
+  {forms && <script is:inline async defer src="https://web3forms.com/client/script.js"></script>}
   <script>
     const nav = document.getElementById('nav');
     const onScroll = () => nav?.classList.toggle('stuck', window.scrollY > 24);
@@ -132,6 +137,133 @@ const BUSINESS = {
         v.pause();
       });
     }
+
+    // ---- Web3Forms submit handling -------------------------------------------
+    // Posts to Web3Forms and renders the outcome on this page. Never redirects to
+    // a third-party confirmation screen, and never claims success optimistically:
+    // the success state requires both an HTTP 200 and success:true in the body.
+    document.querySelectorAll('form[data-w3f]').forEach((form) => {
+      const result = document.getElementById(form.getAttribute('data-result'));
+      const submit = form.querySelector('[type="submit"]');
+      if (!result || !submit) return;
+      const submitLabel = submit.textContent;
+      const FALLBACK =
+        ' Call <a href="tel:+16822260543">682-226-0543</a> or email ' +
+        '<a href="mailto:' + form.getAttribute('data-fallback-email') + '">' +
+        form.getAttribute('data-fallback-email') + '</a> and we will pick it up that way.';
+
+      const errorFor = (el) => {
+        const id = el.getAttribute('aria-describedby');
+        return id ? document.getElementById(id) : null;
+      };
+      const clearError = (el) => {
+        el.removeAttribute('aria-invalid');
+        const e = errorFor(el); if (e) e.textContent = '';
+      };
+      const setError = (el, msg) => {
+        el.setAttribute('aria-invalid', 'true');
+        const e = errorFor(el); if (e) e.textContent = msg;
+      };
+
+      const checkField = (el) => {
+        const v = (el.value || '').trim();
+        if (el.hasAttribute('required') && !v) return 'This one is required.';
+        // Deliberately not a regex. An earlier version was, and a lost backslash
+        // turned [^\s@] into [^s@], which quietly rejected every address whose
+        // local part began with "s". Plain string checks cannot fail that way.
+        if (el.type === 'email' && v) {
+          const at = v.indexOf('@');
+          const dot = v.lastIndexOf('.');
+          const spaced = /\s/.test(v);
+          if (spaced || at < 1 || v.indexOf('@', at + 1) !== -1 || dot < at + 2 || dot > v.length - 3)
+            return 'That email address does not look right.';
+        }
+        if (el.type === 'tel' && v && v.replace(/[^0-9]/g, '').length < 10)
+          return 'A 10-digit phone number, please.';
+        return '';
+      };
+
+      const fields = () => form.querySelectorAll('input[name]:not([type=checkbox]):not([type=radio]), select[name], textarea[name]');
+      fields().forEach((el) => {
+        el.addEventListener('blur', () => { const m = checkField(el); m ? setError(el, m) : clearError(el); });
+        el.addEventListener('input', () => { if (el.getAttribute('aria-invalid')) clearError(el); });
+      });
+
+      const show = (kind, html) => {
+        result.className = 'w3f-result ' + kind;
+        result.innerHTML = html;
+        result.hidden = false;
+        result.focus();
+      };
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        let firstBad = null, count = 0;
+        fields().forEach((el) => {
+          const m = checkField(el);
+          if (m) { setError(el, m); count++; if (!firstBad) firstBad = el; }
+          else clearError(el);
+        });
+        if (count) {
+          show('bad', '<p><strong>' + (count === 1 ? 'One field needs' : count + ' fields need') +
+            ' attention.</strong> The form is marked up below &mdash; fix those and send again.</p>');
+          if (firstBad) firstBad.focus();
+          return;
+        }
+
+        // Only block on the captcha if it actually rendered. If hCaptcha was
+        // blocked or failed to load there is no widget to complete, and refusing
+        // to submit would strand the person with no way through — let it go and
+        // report whatever Web3Forms says instead.
+        const box = form.querySelector('.h-captcha');
+        const rendered = box && box.querySelector('iframe');
+        const token = form.querySelector('[name="h-captcha-response"]');
+        if (rendered && !(token && token.value)) {
+          show('bad', '<p><strong>One step left.</strong> Complete the anti-spam check just above ' +
+            'the button, then send again.</p>');
+          return;
+        }
+
+        // Duplicate keys (checkbox groups) collapse into one comma-joined value
+        // rather than the last one silently winning.
+        const payload = {};
+        new FormData(form).forEach((value, key) => {
+          payload[key] = key in payload ? payload[key] + ', ' + value : value;
+        });
+
+        submit.disabled = true;
+        submit.textContent = 'Sending…';
+        try {
+          const res = await fetch('https://api.web3forms.com/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+            body: JSON.stringify(payload),
+          });
+          let data = {};
+          try { data = await res.json(); } catch (err) {}
+
+          if (res.ok && data.success === true) {
+            show('ok', '<p><strong>Sent.</strong> ' + form.getAttribute('data-success') + '</p>');
+            form.reset();
+            fields().forEach(clearError);
+            if (window.hcaptcha && typeof window.hcaptcha.reset === 'function') {
+              try { window.hcaptcha.reset(); } catch (err) {}
+            }
+            form.querySelectorAll('.w3f-after-send').forEach((el) => { el.hidden = true; });
+          } else {
+            const why = (data && data.message) ? String(data.message) : 'HTTP ' + res.status;
+            show('bad', '<p><strong>That did not send.</strong> ' + why + '</p><p>' + FALLBACK + '</p>');
+          }
+        } catch (err) {
+          show('bad', '<p><strong>That did not send.</strong> The connection failed, so nothing ' +
+            'reached us.</p><p>' + FALLBACK + '</p>');
+        } finally {
+          submit.disabled = false;
+          submit.textContent = submitLabel;
+        }
+      });
+    });
 
     const els = document.querySelectorAll('.rv');
     if (!('IntersectionObserver' in window) ||

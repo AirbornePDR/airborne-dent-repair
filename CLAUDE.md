@@ -221,14 +221,12 @@ on tablet, or a sixth step — not a mechanical fix.
 **Not built yet:**
 
 - Claims page
-- Estimate form with photo upload (retail → `airbornepdr@gmail.com`;
-  wholesale/claims → `Claimsairbornedentrepair@gmail.com`). Needs a backend because
-  of the photo upload. Needs spam protection — honeypot + rate limit is enough at
-  this volume; skip reCAPTCHA unless spam actually appears. Also needs a privacy
-  policy link, and **a named person who monitors that inbox after a storm** — that
-  question used to live in an on-page build note on /wholesale, which has been
-  removed, so it is recorded here instead.
-- Privacy policy + terms. **Required before any form collects data.**
+- **Photo upload on the forms.** Web3Forms Pro only. Both forms currently tell people
+  to email photos instead.
+- **The claims access key.** The wholesale form is built and tested but shows its
+  "not connected" notice until the key is pasted into `src/data/web3forms.ts`.
+- **A named person who monitors the claims inbox after a storm.** Still unanswered.
+  A form that delivers into an inbox nobody is watching is worse than no form.
 - Four photos still have hash filenames and should be renamed descriptively for
   image SEO: `img-01601d4a77.jpeg`, `img-d658fbaced.jpeg`, `img-ea3b4a7cf7.jpeg`,
   `img-f518ef14c1.jpeg`. Update the `<img src>` that references each.
@@ -236,6 +234,52 @@ on tablet, or a sixth step — not a mechanical fix.
 **Owner-blocked, can't be solved in code:** domain purchase, Google Business Profile
 verification, the open `[CONFIRM]` answers, owner portrait, windshield and door-ding
 before/after photos.
+
+## The two forms
+
+Retail estimate on `/contact` → `airbornepdr@gmail.com`. Wholesale & claims on
+`/wholesale` → `Claimsairbornedentrepair@gmail.com`. Both post to **Web3Forms**
+from the browser, so **the site is still fully static** — no adapter, no SSR, no
+serverless function. Keep it that way.
+
+- Access keys live in `src/data/web3forms.ts`. They are **public by design** — they
+  ship in the HTML and name the destination inbox. Nothing is leaked by committing
+  them; do not "secure" them into env vars expecting privacy.
+- **A placeholder key renders a visible "not connected" notice instead of a submit
+  button**, with the phone and email offered instead. A dead form cannot ship
+  quietly. The claims key is still a placeholder — paste it in and the button
+  appears.
+- Success requires **HTTP 200 *and* `success: true`** in the body. A 200 carrying
+  `success:false` is a failure and is rendered as one. Never relax that.
+- Every failure path shows the phone number and the right inbox, so a lead is not
+  lost to a network blip.
+- Free tier: honeypot (`botcheck`) and hCaptcha are included, **file upload is Pro**.
+  Neither form takes photos yet; both say so and point at email.
+- hCaptcha only blocks submission if the widget actually rendered. If the script is
+  blocked, the submit goes through rather than stranding the person.
+- `npm run verify:forms` drives both forms in Chromium and WebKit: labels,
+  `aria-describedby`, fieldset legends, honeypot, validation, the happy path, a
+  200-with-`success:false`, an HTTP 500, and a dead network. Run it after touching
+  anything in the form path.
+
+**Third-party requests are no longer zero on these two pages.** `/contact` and
+`/wholesale` load Web3Forms' client script and hCaptcha; every other page still
+loads nothing external. The privacy policy says so, and it has to stay true.
+
+**Do not put deductible copy on these forms** — no "we help with your deductible",
+no "no out of pocket". Still blocked pending the owner's attorney (rule 4).
+
+## Privacy and terms
+
+`/privacy` and `/terms` exist because the forms collect names and phone numbers.
+Linked from the footer on every page and from under each submit button.
+
+**They are a careful template, not legal review.** They were written to be accurate
+to what the site actually does — the two forms' exact fields, Web3Forms and Gmail as
+the route, hCaptcha, Vercel logs, no analytics, no selling or sharing, and how to ask
+for deletion. Nobody has had them reviewed by an attorney. If the owner wants that,
+this is the draft to hand over. Keep them true: **if the forms change what they
+collect, or a new third party is added, these pages change in the same commit.**
 
 ## The before/after sliders
 

@@ -1,11 +1,14 @@
 ---
 import Base from '../layouts/Base.astro';
+import { RETAIL_ACCESS_KEY, isConfigured } from '../data/web3forms';
 import '../styles/retail.css';
+
+const live = isConfigured(RETAIL_ACCESS_KEY);
 ---
 <Base
   title="Contact &mdash; Airborne Dent Repair"
   description="Call 682-226-0543 or visit Airborne Dent Repair at 489 Reed Ln, Unit 2, Gunter, TX 75058. Free estimates, Monday through Saturday, 9:00 AM to 7:00 PM."
-  nav="Contact" css="retail">
+  nav="Contact" css="retail" forms={true}>
 <main>
 
 <section class="hero" id="top">
@@ -135,6 +138,104 @@ import '../styles/retail.css';
     <p>If you have a claim number already, have it handy. If you do not, that is fine too.</p>
   </div>
 </div>
+
+<section id="estimate">
+  <div class="wrap sec-head">
+    <p class="eyebrow eyebrow-olive rv">Free Estimate</p>
+    <h2 class="display h-lg rv rv-d1">Send Us The Damage.</h2>
+    <p class="prose rv rv-d2">Tell us what you are driving and what happened to it. We read every one of these, and the quickest way to get an answer is still the phone if you would rather do that.</p>
+  </div>
+  <div class="wrap">
+    <form class="w3f rv rv-d1" data-w3f data-result="estimate-result"
+          data-fallback-email="airbornepdr@gmail.com"
+          data-success="Your estimate request is with the shop. We will be in touch on the number you gave us."
+          action="https://api.web3forms.com/submit" method="POST" novalidate>
+      <input type="hidden" name="access_key" value={RETAIL_ACCESS_KEY} />
+      <input type="hidden" name="subject" value="Estimate request from the website" />
+      <input type="hidden" name="from_name" value="Airborne Dent Repair website" />
+      <input class="w3f-hp" type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+      <div class="w3f-grid two">
+        <div class="w3f-field">
+          <label for="r-name">Your name <span class="req" aria-hidden="true">*</span></label>
+          <input id="r-name" name="name" type="text" required autocomplete="name" aria-describedby="r-name-err" />
+          <p class="w3f-err" id="r-name-err"></p>
+        </div>
+        <div class="w3f-field">
+          <label for="r-phone">Phone <span class="req" aria-hidden="true">*</span></label>
+          <input id="r-phone" name="phone" type="tel" required autocomplete="tel" aria-describedby="r-phone-err" />
+          <p class="w3f-err" id="r-phone-err"></p>
+        </div>
+      </div>
+
+      <div class="w3f-grid two">
+        <div class="w3f-field">
+          <label for="r-email">Email</label>
+          <input id="r-email" name="email" type="email" autocomplete="email" aria-describedby="r-email-err" />
+          <p class="w3f-err" id="r-email-err"></p>
+        </div>
+        <div class="w3f-field">
+          <label for="r-vehicle">Year, make and model <span class="req" aria-hidden="true">*</span></label>
+          <input id="r-vehicle" name="vehicle" type="text" required placeholder="2019 Ram 1500" aria-describedby="r-vehicle-err" />
+          <p class="w3f-err" id="r-vehicle-err"></p>
+        </div>
+      </div>
+
+      <div class="w3f-grid two">
+        <div class="w3f-field">
+          <label for="r-damage">Damage type <span class="req" aria-hidden="true">*</span></label>
+          <select id="r-damage" name="damage_type" required aria-describedby="r-damage-err">
+            <option value="">Choose one</option>
+            <option>Hail</option>
+            <option>Door ding</option>
+            <option>Crease</option>
+            <option>Windshield</option>
+            <option>Tint</option>
+          </select>
+          <p class="w3f-err" id="r-damage-err"></p>
+        </div>
+        <div class="w3f-field">
+          <label for="r-carrier">Insurance carrier</label>
+          <input id="r-carrier" name="carrier" type="text" aria-describedby="r-carrier-hint" />
+          <p class="w3f-hint" id="r-carrier-hint">Optional &mdash; only if you already know it.</p>
+        </div>
+      </div>
+
+      <fieldset>
+        <legend>Is this an insurance claim?</legend>
+        <div class="w3f-choices inline">
+          <label class="w3f-choice"><input type="radio" name="insurance_claim" value="Yes" /> Yes</label>
+          <label class="w3f-choice"><input type="radio" name="insurance_claim" value="No" /> No</label>
+          <label class="w3f-choice"><input type="radio" name="insurance_claim" value="Not sure" /> Not sure</label>
+        </div>
+      </fieldset>
+
+      <div class="w3f-field">
+        <label for="r-message">Anything else we should know</label>
+        <textarea id="r-message" name="message" aria-describedby="r-message-hint"></textarea>
+        <p class="w3f-hint" id="r-message-hint">Where the vehicle is, when it happened, how bad it looks to you.</p>
+      </div>
+
+      <div class="h-captcha" data-captcha="true"></div>
+
+      <div class="w3f-actions">
+        {live
+          ? <button class="btn btn-solid" type="submit">Send the request <span aria-hidden="true">&rarr;</span></button>
+          : <p class="w3f-unconfigured"><strong>This form is not connected yet.</strong> Its Web3Forms access key is still a
+              placeholder, so the submit button is deliberately withheld rather than shipping a form that silently
+              goes nowhere. Paste the retail key into <code>src/data/web3forms.ts</code>. Until then,
+              call <a href="tel:+16822260543">682-226-0543</a> or email <a href="mailto:airbornepdr@gmail.com">airbornepdr@gmail.com</a>.</p>}
+        <p class="w3f-legal">
+          We use what you send here to quote and carry out the work, nothing else. See our
+          <a href="/privacy">privacy policy</a> and <a href="/terms">terms</a>. Photo uploads are
+          not available on this form yet &mdash; email them and we will match them to your request.
+        </p>
+      </div>
+
+      <div class="w3f-result" id="estimate-result" role="status" aria-live="polite" tabindex="-1" hidden></div>
+    </form>
+  </div>
+</section>
 
 <section>
   <div class="wrap sec-head lead">

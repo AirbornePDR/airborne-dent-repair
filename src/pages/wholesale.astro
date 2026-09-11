@@ -1,8 +1,11 @@
 ---
 import Base from '../layouts/Base.astro';
+import { CLAIMS_ACCESS_KEY, isConfigured } from '../data/web3forms';
 import '../styles/wholesale.css';
+
+const live = isConfigured(CLAIMS_ACCESS_KEY);
 ---
-<Base title="Wholesale &amp; Fleet \u2014 Airborne Dent Repair" description="Wholesale paintless dent, hail, glass and XPEL tint for dealerships, body shops and fleets across DFW and North Texas. Pickup and delivery, free estimates, lifetime PDR warranty." nav="Wholesale" css="wholesale">
+<Base title="Wholesale &amp; Fleet \u2014 Airborne Dent Repair" description="Wholesale paintless dent, hail, glass and XPEL tint for dealerships, body shops and fleets across DFW and North Texas. Pickup and delivery, free estimates, lifetime PDR warranty." nav="Wholesale" css="wholesale" forms={true}>
 <main>
 
 <!-- ============================ HERO ============================ -->
@@ -378,7 +381,8 @@ import '../styles/wholesale.css';
     <div>
       <p class="prose rv">
         Wholesale inquiries go straight to the claims and accounts desk. If you have photographs of
-        the vehicles, send them — an accurate estimate starts with being able to see the damage.
+        the vehicles, email them across — an accurate estimate starts with being able to see the
+        damage, and this form does not take attachments yet.
       </p>
       <div class="cta-row rv rv-d1" style="margin-top:1.5rem">
         <a class="btn btn-solid" href="mailto:Claimsairbornedentrepair@gmail.com?subject=Wholesale%20account%20inquiry">Email the accounts desk <span>&rarr;</span></a>
@@ -386,25 +390,93 @@ import '../styles/wholesale.css';
       </div>
     </div>
 
-    <form class="fields rv rv-d1" onsubmit="return false">
-      <div class="field"><label>Business name <span class="req">*</span></label><span class="rule"></span></div>
-      <div class="field"><label>Contact name <span class="req">*</span></label><span class="rule"></span></div>
-      <div class="field"><label>Phone <span class="req">*</span></label><span class="rule"></span></div>
-      <div class="field"><label>Email <span class="req">*</span></label><span class="rule"></span></div>
-      <div class="field"><label>Account type <span class="req">*</span></label><span class="rule"></span>
-        <span class="hint">Dealer &middot; Body shop &middot; Fleet &middot; Rental / auction &middot; Insurance &middot; Other</span></div>
-      <div class="field"><label>City / where vehicles sit <span class="req">*</span></label><span class="rule"></span></div>
-      <div class="field"><label>Vehicles in this batch <span class="req">*</span></label><span class="rule"></span></div>
-      <div class="field"><label>Typical monthly volume</label><span class="rule"></span></div>
-      <div class="field wide"><label>Services needed</label><span class="rule"></span>
-        <span class="hint">Hail &middot; Dents &amp; dings &middot; Windshield &amp; glass &middot; XPEL tint</span></div>
-      <div class="field wide"><label>Photos</label><span class="rule"></span>
-        <span class="hint">Upload &mdash; multiple files, images only</span></div>
-      <div class="field wide"><label>Anything else we should know</label><span class="rule"></span>
-        <span class="hint">Free text</span></div>
-      <div class="field wide"><label>Submit &rarr; Claimsairbornedentrepair@gmail.com</label>
-        <span class="hint">Auto-reply confirms receipt and states the response window once the owner sets one.</span></div>
+    <form class="w3f rv rv-d1" data-w3f data-result="account-result"
+          data-fallback-email="Claimsairbornedentrepair@gmail.com"
+          data-success="Your inquiry is with the claims and accounts desk. We will come back to you on the number you gave us."
+          action="https://api.web3forms.com/submit" method="POST" novalidate>
+      <input type="hidden" name="access_key" value={CLAIMS_ACCESS_KEY} />
+      <input type="hidden" name="subject" value="Wholesale / claims inquiry from the website" />
+      <input type="hidden" name="from_name" value="Airborne Dent Repair website" />
+      <input class="w3f-hp" type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+      <div class="w3f-grid two">
+        <div class="w3f-field">
+          <label for="w-business">Business name <span class="req" aria-hidden="true">*</span></label>
+          <input id="w-business" name="business_name" type="text" required autocomplete="organization" aria-describedby="w-business-err" />
+          <p class="w3f-err" id="w-business-err"></p>
+        </div>
+        <div class="w3f-field">
+          <label for="w-contact">Contact name <span class="req" aria-hidden="true">*</span></label>
+          <input id="w-contact" name="contact_name" type="text" required autocomplete="name" aria-describedby="w-contact-err" />
+          <p class="w3f-err" id="w-contact-err"></p>
+        </div>
+      </div>
+
+      <div class="w3f-grid two">
+        <div class="w3f-field">
+          <label for="w-phone">Phone <span class="req" aria-hidden="true">*</span></label>
+          <input id="w-phone" name="phone" type="tel" required autocomplete="tel" aria-describedby="w-phone-err" />
+          <p class="w3f-err" id="w-phone-err"></p>
+        </div>
+        <div class="w3f-field">
+          <label for="w-email">Email</label>
+          <input id="w-email" name="email" type="email" autocomplete="email" aria-describedby="w-email-err" />
+          <p class="w3f-err" id="w-email-err"></p>
+        </div>
+      </div>
+
+      <fieldset>
+        <legend>Business type</legend>
+        <div class="w3f-choices inline">
+          <label class="w3f-choice"><input type="radio" name="business_type" value="Dealer" /> Dealer</label>
+          <label class="w3f-choice"><input type="radio" name="business_type" value="Body shop" /> Body shop</label>
+          <label class="w3f-choice"><input type="radio" name="business_type" value="Fleet" /> Fleet</label>
+        </div>
+      </fieldset>
+
+      <div class="w3f-field">
+        <label for="w-volume">Approximate monthly volume</label>
+        <input id="w-volume" name="monthly_volume" type="number" min="0" step="1" inputmode="numeric"
+               placeholder="30" aria-describedby="w-volume-hint" />
+        <p class="w3f-hint" id="w-volume-hint">Vehicles per month, roughly. Our working ceiling is 25 a week.</p>
+      </div>
+
+      <fieldset>
+        <legend>Services needed</legend>
+        <div class="w3f-choices">
+          <label class="w3f-choice"><input type="checkbox" name="services" value="Hail damage repair" /> Hail damage repair</label>
+          <label class="w3f-choice"><input type="checkbox" name="services" value="Dents &amp; door dings" /> Dents &amp; door dings</label>
+          <label class="w3f-choice"><input type="checkbox" name="services" value="Windshield &amp; glass" /> Windshield &amp; glass</label>
+          <label class="w3f-choice"><input type="checkbox" name="services" value="XPEL tint" /> XPEL tint</label>
+        </div>
+      </fieldset>
+
+      <div class="w3f-field">
+        <label for="w-message">Anything else we should know</label>
+        <textarea id="w-message" name="message" aria-describedby="w-message-hint"></textarea>
+        <p class="w3f-hint" id="w-message-hint">Where the vehicles sit, how many are waiting now, and the turnaround you need.</p>
+      </div>
+
+      <div class="h-captcha" data-captcha="true"></div>
+
+      <div class="w3f-actions">
+        {live
+          ? <button class="btn btn-solid" type="submit">Send the inquiry <span aria-hidden="true">&rarr;</span></button>
+          : <p class="w3f-unconfigured"><strong>This form is not connected yet.</strong> Its Web3Forms access key is still a
+              placeholder, so the submit button is deliberately withheld rather than shipping a form that silently goes
+              nowhere. Paste the claims key into <code>src/data/web3forms.ts</code>. Until then, call
+              <a href="tel:+16822260543">682-226-0543</a> or email
+              <a href="mailto:Claimsairbornedentrepair@gmail.com">Claimsairbornedentrepair@gmail.com</a>.</p>}
+        <p class="w3f-legal">
+          We use what you send here to quote and carry out the work, nothing else. See our
+          <a href="/privacy">privacy policy</a> and <a href="/terms">terms</a>. Photo uploads are not
+          available on this form yet &mdash; email them to the accounts desk and we will match them up.
+        </p>
+      </div>
+
+      <div class="w3f-result" id="account-result" role="status" aria-live="polite" tabindex="-1" hidden></div>
     </form>
+
   </div>
 </section>
 

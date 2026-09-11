@@ -379,6 +379,8 @@ footer{border-top:1px solid var(--hair);padding-block:clamp(2.5rem,5vw,4rem);bac
   border-top:1px solid var(--hair);margin-top:clamp(2rem,4vw,3rem);padding-top:1.25rem;
   display:flex;flex-wrap:wrap;gap:.75rem 1.5rem;justify-content:space-between;font-size:.7rem;color:#63675C;
 }
+.legal a{color:inherit;text-underline-offset:3px}
+.legal a:hover{color:var(--bone)}
 .needs-input{border:1px solid var(--hair);padding:clamp(1.1rem,2vw,1.6rem);display:grid;gap:.75rem}
 
 /* ---------- reveal ---------- */
