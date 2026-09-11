@@ -226,8 +226,6 @@ on tablet, or a sixth step — not a mechanical fix.
   sentence "Neither form accepts file or photo uploads" has to change in the same
   commit, along with the form copy telling people to email them. See the tripwire
   table under *Privacy and terms*.
-- **The claims access key.** The wholesale form is built and tested but shows its
-  "not connected" notice until the key is pasted into `src/data/web3forms.ts`.
 - **A named person who monitors the claims inbox after a storm.** Still unanswered.
   A form that delivers into an inbox nobody is watching is worse than no form.
 - Four photos still have hash filenames and should be renamed descriptively for
@@ -271,8 +269,8 @@ serverless function. Keep it that way.
   them; do not "secure" them into env vars expecting privacy.
 - **A placeholder key renders a visible "not connected" notice instead of a submit
   button**, with the phone and email offered instead. A dead form cannot ship
-  quietly. The claims key is still a placeholder — paste it in and the button
-  appears.
+  quietly. **Both keys are now live**, so neither form shows that notice; the
+  mechanism stays for whatever form comes next.
 - Success requires **HTTP 200 *and* `success: true`** in the body. A 200 carrying
   `success:false` is a failure and is rendered as one. Never relax that.
 - Every failure path shows the phone number and the right inbox, so a lead is not

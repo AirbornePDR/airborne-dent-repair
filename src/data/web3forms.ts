@@ -14,7 +14,7 @@
 export const RETAIL_ACCESS_KEY = 'a25430ac-44ba-4f98-bf03-5f500b9c0dd2';
 // ^ delivers to airbornepdr@gmail.com — retail estimate form on /contact
 
-export const CLAIMS_ACCESS_KEY = 'PASTE_CLAIMS_ACCESS_KEY_HERE';
+export const CLAIMS_ACCESS_KEY = 'bcbe0c27-0ca8-439f-9d8d-a22ecf2d3675';
 // ^ delivers to Claimsairbornedentrepair@gmail.com — wholesale & claims form on /wholesale
 
 /** A key is live once it is no longer the placeholder. */

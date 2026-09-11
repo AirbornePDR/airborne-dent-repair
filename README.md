@@ -113,9 +113,8 @@ canonicals for a placeholder host.
 - [x] Estimate form and wholesale/claims form — built (see below)
 - [x] Privacy policy + terms pages — built and linked from the footer
 - [x] Domain live on airbornedentrepair.com
+- [x] Both Web3Forms keys installed — retail and wholesale/claims
 - [ ] Claims page — still to build, and pulled from the nav until it exists
-- [ ] Paste the wholesale/claims Web3Forms key into `src/data/web3forms.ts`;
-      that form shows a "not connected" notice until it lands
 - [ ] Rename the four leftover photos: `img-01601d4a77.jpeg`, `img-d658fbaced.jpeg`,
       `img-ea3b4a7cf7.jpeg`, `img-f518ef14c1.jpeg` (update the `<img src>` that
       references each; they're descriptive filenames for SEO, not cosmetics)
