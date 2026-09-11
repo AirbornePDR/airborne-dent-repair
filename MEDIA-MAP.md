@@ -88,7 +88,7 @@ chip on the live site stays until he says so.
 
 > **Resolved since this was written.** The owner confirmed the fleet is tiered: the
 > black AMGs are reserved for specialty and exotic vehicles in for repair, and every
-> other loaner comes through CRR Motorsports of Waxahachie. The chip is gone and the
+> other loaner comes through a partner rental provider. The chip is gone and the
 > still row is labelled as the reserved tier. See CLAUDE.md for the two questions
 > that replaced it.
 

@@ -108,6 +108,16 @@ These come from the client brief. They are not style preferences.
 7. **Keep this project entirely separate from Built for the Badge.** BFTB is
    Brendan's own business. Nothing crosses in either direction — no shared brand
    system, palette, copy, repo, or Vercel project.
+8. **A third party's business name does not go in copy until that party has agreed
+   to be named.** The owner confirming that an arrangement exists is *not* the same
+   as the other business agreeing to be listed on a website — he cannot give that
+   consent on their behalf. Until they have agreed, describe the relationship
+   generically ("a partner rental provider") and keep the named version in
+   `WITHHELD-COPY.md`, which is gitignored. **A `[CONFIRM]` chip is not a licence
+   to publish the thing being confirmed.** The chip belongs on the withheld version;
+   the published page ships the generic wording. This rule was written after the
+   partner's name went live with a chip attached to it, which published the name and
+   flagged it at the same time — the flag does not undo the publishing.
 
 ## Verified facts (safe to use in copy)
 
@@ -122,8 +132,10 @@ These come from the client brief. They are not style preferences.
 - **Loaners are tiered, and the tier is the point.** The shop's own black
   Mercedes-AMG fleet (S-Class coupe, GLE 63, G 63) is reserved for specialty and
   exotic vehicles in for repair. A customer bringing in a Passat does not get a
-  Benz. Every other loaner is supplied through **CRR Motorsports of Waxahachie, TX**.
-  Owner-confirmed. Never write the fleet as a blanket promise to every customer.
+  Benz. Every other loaner is supplied through a partner rental provider, which the
+  copy calls exactly that — the partner's name is withheld (see rule 8, and
+  `WITHHELD-COPY.md`, which is gitignored). Owner-confirmed. Never write the fleet
+  as a blanket promise to every customer.
 - **Loaners are a courtesy at no charge**, both tiers, to every client doing business
   with the shop. Owner-confirmed. This is why the word *loaner* is correct sitewide;
   if that ever changes, "loaner" becomes "rental" everywhere and the page has to say
@@ -188,13 +200,9 @@ and that chip has been removed.)
 - `ORIGINALS-fullres/` is gitignored. Full-resolution frames live there for future
   crops and must not be committed.
 
-**One open `[CONFIRM]` on the home fleet block, visible as a chip:**
-
-**Is naming CRR Motorsports on the public site okay with the owner?** He confirmed
-the arrangement; that is not the same as clearing us to name a third party's business
-on a live page. If the answer is no, the line becomes "Everything else goes out
-through a partner shop" and the tier still reads. **This is the last thing blocking
-that block from being launch-ready.**
+**The home fleet block carries no open `[CONFIRM]` and is launch-ready.** The
+partner's name was pulled rather than published with a chip attached — see rule 8.
+The chip lives with the withheld variant in `WITHHELD-COPY.md`, not on the page.
 
 **Still open (photo gaps):** `OWNER-PORTRAIT` — now slotted on `/about`, which is
 where it is most missed — a real windshield before/after pair, a door-ding

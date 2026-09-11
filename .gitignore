@@ -11,3 +11,7 @@ ORIGINALS-fullres/
 # anywhere public. Publishing that file would publish exactly what that note is
 # telling us not to publish. Keep it beside the project, not in it.
 about-page-copy.md
+
+# Copy that is deliberately unpublished, including third-party names not yet
+# cleared. Committing it to a public repo would publish what it exists to withhold.
+WITHHELD-COPY.md
