@@ -257,6 +257,30 @@ tab and in search results — every page but the home page shipped that way unti
 domain went live, and `/wholesale` also carried an uninterpreted `—`. Write
 "—" and "&" directly; Astro escapes them correctly on the way out.
 
+## Whitespace around inline tags
+
+Astro collapses the newline and indent between a text node and an element that
+starts on the next source line. This source:
+
+```
+  send them to
+  <a href="mailto:...">the address</a>
+  once you have submitted
+```
+
+renders as **"send them tothe addressonce you have submitted"**. A space typed on
+the *same* line is preserved, so the fix is to keep the words and the tag together
+on one line, even if the line runs long.
+
+It is nasty because the source reads correctly and only the built page is wrong.
+It shipped three times before anyone noticed, including **"See ourprivacy policy"**
+in the legal line under *both* form submit buttons — the one line on the site whose
+whole job is to be a readable link to the privacy policy.
+
+`npm run verify:site` now scans the built HTML for a word character fused to an
+`<a>`, `<strong>`, `<em>` or `<code>` boundary. It found all three instances and,
+after the fix, finds none.
+
 ## Calls to action
 
 The four service pages are the pattern: **`btn-solid` goes to a form, `btn-ghost`

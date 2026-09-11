@@ -15,3 +15,7 @@ about-page-copy.md
 # Copy that is deliberately unpublished, including third-party names not yet
 # cleared. Committing it to a public repo would publish what it exists to withhold.
 WITHHELD-COPY.md
+
+# Scratch output folder, not project structure. An unreviewed owner photo landed
+# here once and was one `git add -A` away from a public repo.
+Claude outputs/

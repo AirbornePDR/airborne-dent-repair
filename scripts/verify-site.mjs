@@ -105,6 +105,39 @@ const browser = await chromium.launch({ args: ['--autoplay-policy=no-user-gestur
   await ctx.close();
 }
 
+// ------------------------------------------------- words fused to inline tags
+// Astro collapses the newline+indent between a text node and an element that
+// starts on the next source line, so "send them to\n<a>address</a>\nonce" renders
+// as "send them toaddressonce". It is invisible in the source, which reads
+// correctly, and only shows up in the built page. A space on the SAME line is
+// preserved, so the fix is to keep the words and the tag together on one line.
+{
+  const files = [];
+  const walk = (d) => {
+    for (const e of fs.readdirSync(d, { withFileTypes: true })) {
+      const p = path.join(d, e.name);
+      if (e.isDirectory()) walk(p);
+      else if (e.name.endsWith('.html')) files.push(p);
+    }
+  };
+  walk('dist');
+  const BEFORE = /[a-zA-Z0-9,;:]<(?:a |strong|em|code)/g;
+  const AFTER = /<\/(?:a|strong|em|code)>[a-zA-Z0-9]/g;
+  for (const f of files) {
+    const html = fs.readFileSync(f, 'utf8');
+    const hits = [];
+    for (const re of [BEFORE, AFTER]) {
+      re.lastIndex = 0;
+      let m;
+      while ((m = re.exec(html))) {
+        const start = Math.max(0, m.index - 45);
+        hits.push('…' + html.slice(start, m.index + m[0].length + 25).replace(/\s+/g, ' '));
+      }
+    }
+    ok(hits.length === 0, `${f} has a word fused to an inline tag`, hits.join('  ||  '));
+  }
+}
+
 // ------------------------------------------------------- links, layout, copy
 {
   const ctx0 = await browser.newContext({ viewport: { width: 1440, height: 900 } });
