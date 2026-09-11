@@ -13,8 +13,13 @@ import '../styles/home.css';
       <a class="btn btn-ghost" href="tel:6822260543">682-226-0543</a>
     </div>
   </div>
-  <div class="hero-figure" role="img" aria-label="A Mercedes-Benz S-Class coupe under repair in the Airborne Dent Repair shop bay">
-    <span class="slot-tag hero-slot-tag">Still stands in for [HERO-VIDEO]</span>
+  <div class="hero-figure" role="img" aria-label="The Airborne Dent Repair shop at dusk, 489 Reed Ln in Gunter, Texas"
+       style="--hero:url('/img/poster-hero-shop-dusk-vertical.jpg')">
+    <video class="media-video" aria-hidden="true"
+           src="/video/hero-shop-dusk-vertical.mp4"
+           poster="/img/poster-hero-shop-dusk-vertical.jpg"
+           autoplay muted loop playsinline preload="metadata"></video>
+    <span class="slot-tag hero-slot-tag">489 Reed Ln, Unit 2 &middot; Gunter, Texas</span>
   </div>
 </header>
 
@@ -112,6 +117,7 @@ import '../styles/home.css';
   </div>
   <div class="wrap">
     <div class="gallery">
+      <figure class="gal gal-feature rv" style="margin:0"><div class="shot" style="background-image:url(&quot;/img/hero-sclass-on-lift.jpg&quot;)" role="img" aria-label="A black Mercedes-Benz S-Class coupe raised on a lift with its front bumper and wheels off, a technician working the rear quarter panel"></div><figcaption>Mercedes-Benz S-Class &middot; On The Lift</figcaption></figure>
       <figure class="gal rv" style="margin:0"><div class="shot" style="background-image:url(&quot;/img/gallery-rolls-royce-dawn.jpg&quot;)" role="img" aria-label="A white Rolls-Royce Dawn in the shop"></div><figcaption>Rolls-Royce Dawn</figcaption></figure>
       <figure class="gal rv rv-d1" style="margin:0"><div class="shot" style="background-image:url(&quot;/img/gallery-amg-g63-front.jpg&quot;)" role="img" aria-label="A black Mercedes-AMG G 63"></div><figcaption>Mercedes-AMG G 63</figcaption></figure>
       <figure class="gal rv rv-d2" style="margin:0"><div class="shot" style="background-image:url(&quot;/img/gallery-amg-gle63.jpg&quot;)" role="img" aria-label="A black Mercedes-AMG GLE 63"></div><figcaption>Mercedes-AMG GLE 63</figcaption></figure>
@@ -125,13 +131,43 @@ import '../styles/home.css';
 <section id="fleet">
   <div class="wrap">
     <div class="fleet">
-      <div class="slot rv"><span class="slot-tag">[MEDIA: FLEET-VIDEO] · slow pan or full 360° orbit</span></div>
+      <div class="fleet-media rv">
+        <video class="media-video" aria-label="A slow pan across the vehicles parked outside the Airborne Dent Repair shop"
+               src="/video/fleet-pan-01.mp4"
+               poster="/img/poster-fleet-pan-01.jpg"
+               autoplay muted loop playsinline preload="metadata"></video>
+      </div>
       <div class="fleet-copy">
         <p class="eyebrow rv">The Loaner Fleet</p>
         <h2 class="display h-md rv rv-d1">You Shouldn't Have To Rearrange Your Life For A Repair.</h2>
         <p class="prose rv rv-d2">We keep a personal fleet of loaner vehicles on hand. Drop your car off, take a set of keys, and get on with your day.</p>
         <p class="rv rv-d3"><span class="chip">Confirm — which vehicles are loaners vs. customer cars?</span></p>
       </div>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="fleet-stills">
+      <figure class="gal rv" style="margin:0">
+        <img class="shot-img" src="/img/fleet-g63-and-lineup-1200.jpg"
+             srcset="/img/fleet-g63-and-lineup-1200.jpg 1200w, /img/fleet-g63-and-lineup-2400.jpg 2400w"
+             sizes="(min-width:760px) 33vw, 100vw" width="1200" height="800" loading="lazy" decoding="async"
+             alt="A Mercedes-AMG G 63 at the head of a line of vehicles outside the shop">
+        <figcaption>Mercedes-AMG G 63</figcaption>
+      </figure>
+      <figure class="gal rv rv-d1" style="margin:0">
+        <img class="shot-img" src="/img/fleet-g63-low-angle-1200.jpg"
+             srcset="/img/fleet-g63-low-angle-1200.jpg 1200w, /img/fleet-g63-low-angle-2400.jpg 2400w"
+             sizes="(min-width:760px) 33vw, 100vw" width="1200" height="800" loading="lazy" decoding="async"
+             alt="A Mercedes-AMG G 63 photographed low, showing its wheels and stance">
+        <figcaption>Wheels &amp; Stance</figcaption>
+      </figure>
+      <figure class="gal rv rv-d2" style="margin:0">
+        <img class="shot-img" src="/img/fleet-lineup-golden-hour-1200.jpg"
+             srcset="/img/fleet-lineup-golden-hour-1200.jpg 1200w, /img/fleet-lineup-golden-hour-2400.jpg 2400w"
+             sizes="(min-width:760px) 33vw, 100vw" width="1200" height="800" loading="lazy" decoding="async"
+             alt="A Mercedes-Benz S-Class coupe leading a line of vehicles outside the shop in warm evening light">
+        <figcaption>Outside The Shop</figcaption>
+      </figure>
     </div>
   </div>
 </section>
@@ -219,7 +255,11 @@ import '../styles/home.css';
   </div>
 </section>
 
-<section class="final" id="contact">
+<section class="final final-media" id="contact">
+  <video class="media-video" aria-hidden="true"
+         src="/video/shop-dusk-wide.mp4"
+         poster="/img/poster-shop-dusk-wide.jpg"
+         autoplay muted loop playsinline preload="metadata"></video>
   <div class="wrap">
     <div class="final-grid">
       <div>

@@ -65,6 +65,16 @@ const BUSINESS = {
       range.addEventListener('input', set); set();
     });
 
+    // Autoplaying loops are motion too. CSS cannot stop a video that has
+    // already started, so pause them here and let the poster stand in.
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.querySelectorAll('video[autoplay]').forEach((v) => {
+        v.removeAttribute('autoplay');
+        v.loop = false;
+        v.pause();
+      });
+    }
+
     const els = document.querySelectorAll('.rv');
     if (!('IntersectionObserver' in window) ||
         matchMedia('(prefers-reduced-motion: reduce)').matches) {

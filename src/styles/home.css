@@ -14,6 +14,10 @@
   --sans:"Archivo","Helvetica Neue",Helvetica,Arial,sans-serif;
   --pad:clamp(1.25rem,4.5vw,4.5rem);
   --rhythm:clamp(3.75rem,8vw,7rem);
+  /* Fallback only. The home hero is the vertical dusk clip, and index.astro
+     overrides --hero inline with that clip's poster, so the still behind the
+     video is the same file the video already carries — one request, not two.
+     hero-sclass-on-lift.jpg itself now leads the work gallery. */
   --hero:url("/img/hero-sclass-on-lift.jpg");
   --logo:url("/img/logo_700.png");
 }
@@ -102,6 +106,17 @@ section{padding-block:var(--rhythm)}
   font-weight:500;font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;
   color:var(--bone-dim);padding:.5rem .7rem;margin:.7rem;
   background:rgba(2,3,3,.72);border:1px solid var(--hair);
+}
+
+/* Silent clips, and stills that carry their own srcset.
+   Both fill a container that owns the aspect ratio, so nothing reflows while
+   the file loads. Every video is muted + playsinline (iOS refuses to autoplay
+   without both) and carries a poster, which is what shows while it loads and
+   on connections too slow to start it. The reduced-motion pause lives in the
+   Base.astro script, not here — CSS cannot stop a video that is already playing. */
+.media-video,.shot-img{
+  position:absolute;inset:0;width:100%;height:100%;
+  display:block;object-fit:cover;background:var(--ink-2);
 }
 
 /* ---------- nav ---------- */
@@ -242,8 +257,18 @@ section{padding-block:var(--rhythm)}
 @media(min-width:640px){.gallery{grid-template-columns:repeat(2,1fr)}}
 @media(min-width:1050px){.gallery{grid-template-columns:repeat(3,1fr)}}
 .gal{position:relative;aspect-ratio:4/3;overflow:hidden;background:var(--ink);margin:0}
-.gal .shot{position:absolute;inset:0;transition:transform .9s cubic-bezier(.2,.7,.3,1)}
-.gal:hover .shot{transform:scale(1.04)}
+.gal .shot,.gal .shot-img{position:absolute;inset:0;transition:transform .9s cubic-bezier(.2,.7,.3,1)}
+.gal:hover .shot,.gal:hover .shot-img{transform:scale(1.04)}
+/* The lead tile spans every column, which also keeps the cell count exact at
+   each breakpoint (1+6, 2+6, 3+6) — a stray empty cell would show the grid's
+   hairline background as a dark block. 16/9 is the photo's native ratio, so it
+   is never cropped.
+   No max-height here, deliberately. A grid item carrying aspect-ratio stops
+   stretching once its height is clamped, and resolves its WIDTH back from the
+   clamped height instead — which shrank this tile to 1024px inside a 1311px
+   row and left exactly the empty cell the full-row span was there to prevent.
+   width:100% keeps the tile pinned to the row whatever else changes. */
+.gal-feature{grid-column:1/-1;width:100%;aspect-ratio:16/9}
 .gal figcaption{
   position:absolute;left:0;right:0;bottom:0;padding:2.5rem .9rem .8rem;
   background:linear-gradient(to top,rgba(2,3,3,.9),transparent);
@@ -257,6 +282,14 @@ section{padding-block:var(--rhythm)}
   .vet{grid-template-columns:.8fr 1.2fr}
   .area{grid-template-columns:1.05fr .95fr;align-items:start}
 }
+.fleet-media{position:relative;overflow:hidden;border:1px solid var(--hair);aspect-ratio:910/510}
+/* three tiles, and never a half-empty row: one column until there is room for
+   all three, so the 1px grid background never shows through an empty cell */
+.fleet-stills{
+  display:grid;gap:1px;background:var(--hair);border-block:1px solid var(--hair);
+  grid-template-columns:minmax(0,1fr);margin-top:clamp(2rem,5vw,3.5rem);
+}
+@media(min-width:760px){.fleet-stills{grid-template-columns:repeat(3,minmax(0,1fr))}}
 .fleet .slot{aspect-ratio:16/10}
 .vet .slot{aspect-ratio:4/5}
 .area .slot{aspect-ratio:5/4;align-items:center;justify-content:center}
@@ -303,6 +336,15 @@ section{padding-block:var(--rhythm)}
 
 /* ---------- final + footer ---------- */
 .final{background:var(--ink-2);border-top:1px solid var(--hair)}
+/* The dusk clip runs behind the closing CTA. Two scrims, not one: a flat
+   darkening pass so the white display type clears contrast over every frame,
+   plus a left-weighted gradient so the headline side stays darkest. */
+.final-media{position:relative;overflow:hidden;background:var(--ink)}
+.final-media::before{
+  content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(to right,rgba(2,3,3,.94),rgba(2,3,3,.66) 58%,rgba(2,3,3,.78)),rgba(2,3,3,.34);
+}
+.final-media>.wrap{position:relative;z-index:2}
 .final-grid{display:grid;gap:clamp(1.5rem,4vw,3rem);align-items:end}
 @media(min-width:900px){.final-grid{grid-template-columns:1.3fr .7fr}}
 footer{border-top:1px solid var(--hair);padding-block:clamp(2.5rem,5vw,4rem);background:var(--ink)}

@@ -137,15 +137,38 @@ contractor, or a contact on the carrier side, and those read very differently.
 
 ## State of the build
 
-**Done and verified** — 6 pages build clean, no horizontal overflow at 390px or
-1440px, one nav and one footer each, no broken images:
+**Done and verified** — 7 pages build clean, no horizontal overflow at 390px or
+1440px, one nav and one footer each, no broken images, every video decoding with a
+poster:
 
-`/` · `/wholesale` · `/hail-damage-repair` · `/paintless-dent-repair` ·
+`/` · `/wholesale` · `/contact` · `/hail-damage-repair` · `/paintless-dent-repair` ·
 `/windshield-replacement` · `/window-tint`
+
+**Media, as of the shoot delivered with `MEDIA-MAP.md`:**
+
+- **`SHOP-EXTERIOR` — closed.** `shop-exterior-fleet-lineup-*.jpg` leads the Contact
+  hero.
+- **`FLEET-STILLS` and `FLEET-VIDEO` — closed.** `fleet-pan-01.mp4` plus a three-up
+  still row in the home fleet section; `fleet-pan-02.mp4` runs as a band on
+  /wholesale. The `[CONFIRM]` chip asking which vehicles are loaners vs. customer
+  cars **stays until the owner answers** — staged fleet photos at the shop imply
+  they are loaners, and that implication is exactly what is unverified.
+- `hero-shop-dusk-vertical.mp4` is the home hero (720×1280, the only clip that fits
+  that panel uncropped); `shop-dusk-wide.mp4` runs behind the home closing CTA.
+- Videos are silent, autoplay+loop+`playsinline`+poster, and are paused with `loop`
+  stripped under `prefers-reduced-motion` by the script in `Base.astro`.
+- Photos ship at `-1200` and `-2400` and are wired as `<img srcset>`, not CSS
+  backgrounds, so the browser actually picks between the two sizes.
+- `ORIGINALS-fullres/` is gitignored. Full-resolution frames live there for future
+  crops and must not be committed.
+
+**Still open (photo gaps):** `OWNER-PORTRAIT`, a real windshield before/after pair, a
+door-ding before/after pair, and the service-area map slot on the home page. Those
+four placeholders are deliberately still visible on the site.
 
 **Not built yet:**
 
-- Services index, Claims, About, Contact pages
+- Services index, Claims, About pages
 - Estimate form with photo upload (retail → `airbornepdr@gmail.com`;
   wholesale/claims → `Claimsairbornedentrepair@gmail.com`). Needs a backend because
   of the photo upload. Needs spam protection — honeypot + rate limit is enough at
