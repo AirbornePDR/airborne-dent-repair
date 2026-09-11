@@ -137,12 +137,26 @@ contractor, or a contact on the carrier side, and those read very differently.
 
 ## State of the build
 
-**Done and verified** — 7 pages build clean, no horizontal overflow at 390px or
-1440px, one nav and one footer each, no broken images, every video decoding with a
-poster:
+**Done and verified** — 9 pages build clean, no horizontal overflow at 390, 768,
+1000, 1280 or 1440px, one nav and one footer each, no broken images, every video
+decoding with a poster, every internal link resolving 200, and no grid row left
+half empty:
 
-`/` · `/wholesale` · `/contact` · `/hail-damage-repair` · `/paintless-dent-repair` ·
-`/windshield-replacement` · `/window-tint`
+`/` · `/services` · `/wholesale` · `/about` · `/contact` · `/hail-damage-repair` ·
+`/paintless-dent-repair` · `/windshield-replacement` · `/window-tint`
+
+**Nav is five items and every one of them resolves.** `Claims` was pulled: it was
+linking to a 404, and there is no approved copy to build the page from. Put it back
+the moment `/claims` exists. A nav link to a 404 is worse than no link.
+
+**`/about` is built from `about-page-copy.md`**, which sits in the project root and
+is **gitignored on purpose** — this repo is public and that file carries the note
+that the deductible assistance offer needs the owner's attorney before it appears
+anywhere public. Two deliberate departures from that draft:
+the warranty sentence is scoped to *paintless* repair, because "every repair carries
+a lifetime warranty" would extend it to glass and tint, which is not the verified
+fact; and the unit designation carries a visible `Confirm` chip, because the draft
+asks for it to be checked against the DD-214 before launch.
 
 **Media, as of the shoot delivered with `MEDIA-MAP.md`:**
 
@@ -162,13 +176,23 @@ poster:
 - `ORIGINALS-fullres/` is gitignored. Full-resolution frames live there for future
   crops and must not be committed.
 
-**Still open (photo gaps):** `OWNER-PORTRAIT`, a real windshield before/after pair, a
-door-ding before/after pair, and the service-area map slot on the home page. Those
-four placeholders are deliberately still visible on the site.
+**Still open (photo gaps):** `OWNER-PORTRAIT` — now slotted on `/about`, which is
+where it is most missed — a real windshield before/after pair, a door-ding
+before/after pair, the windshield service card shot, and the service-area map slot
+on the home page. Those placeholders are deliberately still visible on the site.
+
+**Grid rows must divide.** A tiled grid (`.gallery`, `.steps`, `.others`,
+`.services`) draws its 1px rules as a hairline *background* behind the tiles, so a
+last row that is not full shows that background as a pale block. Column count has to
+divide item count at every breakpoint. `retail.css` carries `.steps-3`, `.steps-4`
+and `.others-4` modifiers for the counts the base rules do not suit. **One known
+instance remains:** `/wholesale` has 5 steps in a 2-column row between 700px and
+1249px. Five does not divide by two, so fixing it is a design choice — single column
+on tablet, or a sixth step — not a mechanical fix.
 
 **Not built yet:**
 
-- Services index, Claims, About pages
+- Claims page
 - Estimate form with photo upload (retail → `airbornepdr@gmail.com`;
   wholesale/claims → `Claimsairbornedentrepair@gmail.com`). Needs a backend because
   of the photo upload. Needs spam protection — honeypot + rate limit is enough at
@@ -191,10 +215,17 @@ before/after photos.
   actually check the rendered page — Playwright headless at 390px and 1440px,
   asserting `document.documentElement.scrollWidth === window.innerWidth`. Horizontal
   overflow has bitten this project twice.
-- The overflow cause both times: **implicit `auto` grid tracks size to max-content
-  and are not clamped by their container.** There's a blanket
+- The overflow cause, three times now: **implicit `auto` grid tracks size to
+  max-content and are not clamped by their container.** There's a blanket
   `grid-template-columns:minmax(0,1fr)` guard rule near the top of each stylesheet.
-  Keep it above the component rules so media queries still win.
+  Keep it above the component rules so media queries still win. The third instance
+  was `.intro` missing from that list in `retail.css`, which pushed `/about` to
+  455px wide at a 390px viewport. **When you add a multi-column grid, add it to the
+  guard list in the same edit.**
+- Careful with `aspect-ratio` on a grid item: once its height is clamped by a
+  `max-height`, it stops stretching and resolves its **width** back from that
+  height. That silently shrank the home gallery's lead tile and left an empty cell.
+  Cap width, not height.
 - New page → copy the closest existing page's structure, import the stylesheet
   matching its accent, add it to the `links` array in `Nav.astro` and to
   `public/sitemap.xml`.

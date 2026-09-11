@@ -4,3 +4,10 @@ dist/
 .DS_Store
 .vercel
 ORIGINALS-fullres/
+
+# Client copy decks stay out of a public repo. about-page-copy.md carries the
+# rationale behind the About copy, including the note that the deductible
+# assistance offer needs the owner's attorney or carrier rep before it appears
+# anywhere public. Publishing that file would publish exactly what that note is
+# telling us not to publish. Keep it beside the project, not in it.
+about-page-copy.md

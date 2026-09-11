@@ -113,7 +113,7 @@ section{padding-block:var(--rhythm)}
    to max-content and is NOT clamped by its container, so one long uppercase label inside a
    card is enough to push that card — and the whole page — wider than the viewport. Declared
    here, above the component rules, so the responsive multi-column media queries still win. */
-.sec-head,.services,.svc,.svc-body,.steps,.step,.gallery,.cat,.cat-list,
+.sec-head,.services,.svc,.svc-body,.steps,.step,.gallery,.cat,.cat-list,.intro,
 .final-grid,.contact-block,.foot-grid,.foot-col,.needs-input,.cross,
 .facts,.detail,.detail-list,.detail-list li,.others,.other{
   grid-template-columns:minmax(0,1fr);
@@ -338,6 +338,19 @@ section{padding-block:var(--rhythm)}
 /* ---------- the other three services ---------- */
 .others{display:grid;gap:1px;background:var(--hair);border-block:1px solid var(--hair)}
 @media(min-width:700px){.others{grid-template-columns:repeat(3,1fr)}}
+
+/* Column count has to divide item count or the last row leaves a cell showing
+   the grid's own hairline background as a pale block. The base rules above suit
+   the common counts; these pin the exceptions. Doubled class so they win on
+   specificity rather than on source order. */
+.steps.steps-3{grid-template-columns:minmax(0,1fr)}
+@media(min-width:860px){.steps.steps-3{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.steps.steps-4{grid-template-columns:minmax(0,1fr)}
+@media(min-width:700px){.steps.steps-4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(min-width:1150px){.steps.steps-4{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.others.others-4{grid-template-columns:minmax(0,1fr)}
+@media(min-width:700px){.others.others-4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(min-width:1150px){.others.others-4{grid-template-columns:repeat(4,minmax(0,1fr))}}
 .other{background:var(--ink);text-decoration:none;padding:clamp(1.5rem,2.6vw,2.25rem);
   display:grid;gap:.7rem;align-content:start;transition:background .35s ease}
 .other:hover{background:var(--ink-2)}
