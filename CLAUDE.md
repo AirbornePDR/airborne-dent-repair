@@ -119,6 +119,17 @@ These come from the client brief. They are not style preferences.
 - Tint is XPEL exclusively, with manufacturer warranty.
 - Wholesale: pickup and delivery offered, ~25 vehicles/week max, turnaround quoted
   after estimate.
+- **Loaners are tiered, and the tier is the point.** The shop's own black
+  Mercedes-AMG fleet (S-Class coupe, GLE 63, G 63) is reserved for specialty and
+  exotic vehicles in for repair. A customer bringing in a Passat does not get a
+  Benz. Every other loaner is supplied through **CRR Motorsports of Waxahachie, TX**.
+  Owner-confirmed. Never write the fleet as a blanket promise to every customer.
+- **Loaners are a courtesy at no charge**, both tiers, to every client doing business
+  with the shop. Owner-confirmed. This is why the word *loaner* is correct sitewide;
+  if that ever changes, "loaner" becomes "rental" everywhere and the page has to say
+  who pays.
+- Unit designation is owner-confirmed against his record: 1-501st "Geronimo"
+  (Airborne), Alaska, dates as written. The DD-214 question is closed.
 - Reach: HQ in Gunter, regular service across greater DFW and North Texas, plus
   catastrophe response deployed nationally to severe hail events.
 - Phone 682-226-0543 · Fax 833-907-5267
@@ -155,8 +166,8 @@ that the deductible assistance offer needs the owner's attorney before it appear
 anywhere public. Two deliberate departures from that draft:
 the warranty sentence is scoped to *paintless* repair, because "every repair carries
 a lifetime warranty" would extend it to glass and tint, which is not the verified
-fact; and the unit designation carries a visible `Confirm` chip, because the draft
-asks for it to be checked against the DD-214 before launch.
+fact. (The draft's second ask — check the unit against the DD-214 — is now answered,
+and that chip has been removed.)
 
 **Media, as of the shoot delivered with `MEDIA-MAP.md`:**
 
@@ -164,9 +175,10 @@ asks for it to be checked against the DD-214 before launch.
   hero.
 - **`FLEET-STILLS` and `FLEET-VIDEO` — closed.** `fleet-pan-01.mp4` plus a three-up
   still row in the home fleet section; `fleet-pan-02.mp4` runs as a band on
-  /wholesale. The `[CONFIRM]` chip asking which vehicles are loaners vs. customer
-  cars **stays until the owner answers** — staged fleet photos at the shop imply
-  they are loaners, and that implication is exactly what is unverified.
+  /wholesale. The old "which vehicles are loaners" chip is answered and gone. The
+  still row now carries the eyebrow **"Our Own Fleet · Reserved For Specialty &
+  Exotic Vehicles"**, so the photos cannot be read as a blanket promise. Keep that
+  label if you move the photos.
 - `hero-shop-dusk-vertical.mp4` is the home hero (720×1280, the only clip that fits
   that panel uncropped); `shop-dusk-wide.mp4` runs behind the home closing CTA.
 - Videos are silent, autoplay+loop+`playsinline`+poster, and are paused with `loop`
@@ -175,6 +187,14 @@ asks for it to be checked against the DD-214 before launch.
   backgrounds, so the browser actually picks between the two sizes.
 - `ORIGINALS-fullres/` is gitignored. Full-resolution frames live there for future
   crops and must not be committed.
+
+**One open `[CONFIRM]` on the home fleet block, visible as a chip:**
+
+**Is naming CRR Motorsports on the public site okay with the owner?** He confirmed
+the arrangement; that is not the same as clearing us to name a third party's business
+on a live page. If the answer is no, the line becomes "Everything else goes out
+through a partner shop" and the tier still reads. **This is the last thing blocking
+that block from being launch-ready.**
 
 **Still open (photo gaps):** `OWNER-PORTRAIT` — now slotted on `/about`, which is
 where it is most missed — a real windshield before/after pair, a door-ding

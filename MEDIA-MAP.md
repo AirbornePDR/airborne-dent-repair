@@ -86,6 +86,12 @@ is a headline, not a footnote — no competitor in Grayson County is lending an 
 they fix your hail damage. The `Confirm — which vehicles are loaners vs. customer cars?`
 chip on the live site stays until he says so.
 
+> **Resolved since this was written.** The owner confirmed the fleet is tiered: the
+> black AMGs are reserved for specialty and exotic vehicles in for repair, and every
+> other loaner comes through CRR Motorsports of Waxahachie. The chip is gone and the
+> still row is labelled as the reserved tier. See CLAUDE.md for the two questions
+> that replaced it.
+
 ## Still missing after this
 
 - `OWNER-PORTRAIT` — the About page has the story and no face. Biggest remaining gap.
