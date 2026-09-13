@@ -193,6 +193,15 @@ section{padding-block:var(--rhythm)}
 @media(max-width:979px){
   .hero-panel::before{width:min(80%,420px);right:-24%;opacity:.045}
 }
+/* TEMPORARY launch banner — delete with the WIP_BANNER block in index.astro */
+.wip{
+  margin:0;padding:.8rem 1rem;max-width:58ch;
+  border-left:2px solid var(--olive-lift);background:rgba(10,12,8,.82);
+  font-size:.85rem;line-height:1.55;color:var(--bone-dim);
+}
+.wip strong{color:var(--bone)}
+.wip a{color:var(--olive-lift);text-underline-offset:3px;white-space:nowrap}
+
 .hero h1{margin:0;max-width:15ch}
 .hero-foot{display:flex;flex-wrap:wrap;gap:clamp(1.25rem,3vw,2.5rem);align-items:flex-end;justify-content:space-between}
 .sound{

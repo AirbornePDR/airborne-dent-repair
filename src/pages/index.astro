@@ -1,10 +1,17 @@
 ---
 import Base from '../layouts/Base.astro';
 import '../styles/home.css';
+
+// TEMPORARY launch banner. Set to false (or delete this const and the block that
+// uses it, plus .wip in home.css) once the site is finished — nothing else on the
+// site references it. Home page only, by design: it should not follow a customer
+// onto the estimate form.
+const WIP_BANNER = true;
 ---
 <Base title="Airborne Dent Repair" description="" nav="Home" css="home">
 <main><header class="hero" id="top">
   <div class="hero-panel">
+    {WIP_BANNER && <p class="wip rv"><strong>Finishing touches in progress.</strong> We&rsquo;re adding a few more pages and photographs over the next several days. Everything already here is accurate, and the phone and the estimate form are live — <a href="tel:+16822260543">682-226-0543</a>.</p>}
     <p class="eyebrow rv">Gunter, Texas — Veteran Owned &amp; Operated</p>
     <h1 class="display h-xl rv rv-d1">Hail Doesn't Wait. Neither Do We.</h1>
     <p class="lede rv rv-d2">Paintless dent repair, windshield replacement, and window tint. Lifetime warranty on every repair.</p>
