@@ -29,6 +29,10 @@ const FORMS = [
     email: '#w-email', select: {},
     radios: ['input[name=business_type][value="Dealer"]'],
     checks: ['input[name=services][value="Hail damage repair"]','input[name=services][value="XPEL tint"]'] },
+  { url: '/check-in', result: '#checkin-result', btn: 'Send my check-in',
+    fill: {'#c-name':'Sam Okafor','#c-cell':'9725550147','#c-email':'sam@example.com','#c-yearmake':'2019 Ram'},
+    email: '#c-email', select: {},
+    radios: ['input[value="Yes"][name^="08 Customer"]'], checks: [] },
 ];
 
 const SKIP = new Set(JSON.parse(process.env.SKIP_FORMS || "[]"));
@@ -182,8 +186,10 @@ for (const [engine, launcher] of [['CHROMIUM', chromium], ['WEBKIT  ', webkit]])
          `${engine} 200 + success:false = FAILURE      ${F.url}`);
       ok(/Invalid access key/.test(r.txt), `${engine} server reason surfaced            ${F.url}`);
       ok(/682-226-0543/.test(r.txt), `${engine} phone fallback shown on failure    ${F.url}`);
-      const emailShown = F.url === '/contact' ? /airbornepdr@gmail\.com/ : /Claimsairbornedentrepair@gmail\.com/;
-      ok(emailShown.test(r.txt), `${engine} correct email fallback shown       ${F.url}`);
+      // the expected address is whatever the form declares, not a hardcoded guess
+      const declared = await page.evaluate(() =>
+        document.querySelector('form[data-w3f]').getAttribute('data-fallback-email'));
+      ok(r.txt.includes(declared), `${engine} correct email fallback shown       ${F.url}`, declared);
       ok(r.focused, `${engine} focus moved to error message      ${F.url}`);
       const kept = await page.inputValue(Object.keys(F.fill)[0]);
       ok(kept !== '', `${engine} input preserved on failure        ${F.url}`);

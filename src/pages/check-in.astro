@@ -1,0 +1,233 @@
+---
+import Base from '../layouts/Base.astro';
+import { RETAIL_ACCESS_KEY, isConfigured, PRO_PLAN } from '../data/web3forms';
+import '../styles/retail.css';
+
+const live = isConfigured(RETAIL_ACCESS_KEY);
+
+// Field names are numbered and section-prefixed on purpose. Web3Forms emails one
+// row per field, and the docs do not promise an order, so the numbers force the
+// notification to print in the same order as the paper Repair Order no matter how
+// it sorts. Keep them in step with the paper form if that form changes.
+---
+<Base
+  title="Pre-Arrival Check-In — Airborne Dent Repair"
+  description="Already booked with Airborne Dent Repair? Send us your details before you arrive so the paperwork is quicker when you get to the shop."
+  nav="Check-in" css="retail" forms={true}>
+<main>
+
+<section class="hero hero-short" id="top">
+  <div class="hero-panel">
+    <p class="eyebrow eyebrow-olive rv">Already Booked</p>
+    <h1 class="display h-xl rv rv-d1">Pre-Arrival<br>Check-In.</h1>
+    <p class="lede rv rv-d2">Send us the straightforward parts before you come in and we will have most of the paperwork ready. It takes a couple of minutes and saves you sitting in the office filling in boxes.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="w3f-note rv">
+      <p><strong>This is a check-in, not an authorization.</strong> Nothing is booked and no repair is approved. We&rsquo;ll go through everything with you at the shop and you&rsquo;ll sign the repair authorization there. Bring your driver&rsquo;s licence and your insurance card.</p>
+    </div>
+  </div>
+</section>
+
+<section id="checkin">
+  <div class="wrap">
+    <form class="w3f rv" data-w3f data-result="checkin-result"
+          data-fallback-email="airbornepdr@gmail.com"
+          data-subject="Check-in — {name} — {vehicle}"
+          data-success="Your check-in is with the shop. Nothing is booked by this and no repair is approved — we will go through everything with you at the shop and you will sign the repair authorization there. Bring your driver's licence and your insurance card."
+          action="https://api.web3forms.com/submit" method="POST"
+          enctype={PRO_PLAN ? 'multipart/form-data' : undefined} novalidate>
+      <input type="hidden" name="access_key" value={RETAIL_ACCESS_KEY} />
+      <input type="hidden" name="from_name" value="Airborne Dent Repair website" />
+      <input class="w3f-hp" type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+      <fieldset class="w3f-section">
+        <legend>Customer Information</legend>
+        <div class="w3f-grid two">
+          <div class="w3f-field">
+            <label for="c-name">Name <span class="req" aria-hidden="true">*</span></label>
+            <input id="c-name" name="01 Customer · Name" type="text" required autocomplete="name"
+                   data-subject-key="name" aria-describedby="c-name-err" />
+            <p class="w3f-err" id="c-name-err"></p>
+          </div>
+          <div class="w3f-field">
+            <label for="c-address">Address</label>
+            <input id="c-address" name="02 Customer · Address" type="text" autocomplete="street-address" aria-describedby="c-address-err" />
+            <p class="w3f-err" id="c-address-err"></p>
+          </div>
+        </div>
+        <div class="w3f-grid two">
+          <div class="w3f-field">
+            <label for="c-csz">City / State / ZIP</label>
+            <input id="c-csz" name="03 Customer · City / State / ZIP" type="text" aria-describedby="c-csz-err" />
+            <p class="w3f-err" id="c-csz-err"></p>
+          </div>
+          <div class="w3f-field">
+            <label for="c-email">Email</label>
+            <input id="c-email" name="04 Customer · Email" type="email" autocomplete="email"
+                   data-replyto aria-describedby="c-email-err" />
+            <p class="w3f-err" id="c-email-err"></p>
+          </div>
+        </div>
+        <div class="w3f-grid two">
+          <div class="w3f-field">
+            <label for="c-cell">Cell Phone <span class="req" aria-hidden="true">*</span></label>
+            <input id="c-cell" name="05 Customer · Cell Phone" type="tel" required autocomplete="tel" aria-describedby="c-cell-err" />
+            <p class="w3f-err" id="c-cell-err"></p>
+          </div>
+          <div class="w3f-field">
+            <label for="c-work">Work Phone</label>
+            <input id="c-work" name="06 Customer · Work Phone" type="tel" aria-describedby="c-work-err" />
+            <p class="w3f-err" id="c-work-err"></p>
+          </div>
+        </div>
+        <div class="w3f-field">
+          <label for="c-heard">How did you hear about us</label>
+          <input id="c-heard" name="07 Customer · How did you hear about us" type="text" aria-describedby="c-heard-err" />
+          <p class="w3f-err" id="c-heard-err"></p>
+        </div>
+        <fieldset>
+          <legend>Rental Car Needed</legend>
+          <div class="w3f-choices inline">
+            <label class="w3f-choice"><input type="radio" name="08 Customer · Rental Car Needed" value="Yes" /> Yes</label>
+            <label class="w3f-choice"><input type="radio" name="08 Customer · Rental Car Needed" value="No" /> No</label>
+          </div>
+        </fieldset>
+      </fieldset>
+
+      <fieldset class="w3f-section">
+        <legend>Vehicle Information</legend>
+        <div class="w3f-grid two">
+          <div class="w3f-field">
+            <label for="c-yearmake">Year / Make <span class="req" aria-hidden="true">*</span></label>
+            <input id="c-yearmake" name="09 Vehicle · Year / Make" type="text" required placeholder="2019 Ram"
+                   data-subject-key="vehicle" aria-describedby="c-yearmake-err" />
+            <p class="w3f-err" id="c-yearmake-err"></p>
+          </div>
+          <div class="w3f-field">
+            <label for="c-modelcolor">Model / Color</label>
+            <input id="c-modelcolor" name="10 Vehicle · Model / Color" type="text" placeholder="1500, black" aria-describedby="c-modelcolor-err" />
+            <p class="w3f-err" id="c-modelcolor-err"></p>
+          </div>
+        </div>
+        <div class="w3f-field">
+          <label for="c-mileage">Mileage</label>
+          <input id="c-mileage" name="11 Vehicle · Mileage" type="text" inputmode="numeric" aria-describedby="c-mileage-hint" />
+          <p class="w3f-hint" id="c-mileage-hint">Roughly is fine. We read it again when the vehicle arrives.</p>
+        </div>
+      </fieldset>
+
+      <fieldset class="w3f-section">
+        <legend>Insurance Information</legend>
+        <p class="w3f-hint">Only if a claim is involved. Skip this whole section if you are paying for the work yourself.</p>
+        <div class="w3f-grid two">
+          <div class="w3f-field">
+            <label for="c-insco">Insurance Company</label>
+            <input id="c-insco" name="12 Insurance · Insurance Company" type="text" aria-describedby="c-insco-err" />
+            <p class="w3f-err" id="c-insco-err"></p>
+          </div>
+          <div class="w3f-field">
+            <label for="c-claim">Claim #</label>
+            <input id="c-claim" name="13 Insurance · Claim #" type="text" aria-describedby="c-claim-err" />
+            <p class="w3f-err" id="c-claim-err"></p>
+          </div>
+        </div>
+        <div class="w3f-grid two">
+          <div class="w3f-field">
+            <label for="c-deductible">Deductible Amount</label>
+            <input id="c-deductible" name="14 Insurance · Deductible Amount" type="text" inputmode="decimal" aria-describedby="c-deductible-hint" />
+            <p class="w3f-hint" id="c-deductible-hint">The amount stated on your policy, so we can write the file up correctly.</p>
+          </div>
+          <div class="w3f-field">
+            <fieldset>
+              <legend>Previous Initial Estimate</legend>
+              <div class="w3f-choices inline">
+                <label class="w3f-choice"><input type="radio" name="15 Insurance · Previous Initial Estimate" value="Yes" /> Yes</label>
+                <label class="w3f-choice"><input type="radio" name="15 Insurance · Previous Initial Estimate" value="No" /> No</label>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+        <div class="w3f-field">
+          <label for="c-priorAmount">Previous Initial Estimate &mdash; Amount</label>
+          <input id="c-priorAmount" name="16 Insurance · Previous Initial Estimate Amount" type="text" inputmode="decimal" aria-describedby="c-priorAmount-err" />
+          <p class="w3f-err" id="c-priorAmount-err"></p>
+        </div>
+        <div class="w3f-grid two">
+          <div class="w3f-field">
+            <label for="c-adjname">Adjuster&rsquo;s Name</label>
+            <input id="c-adjname" name="17 Insurance · Adjuster's Name" type="text" aria-describedby="c-adjname-err" />
+            <p class="w3f-err" id="c-adjname-err"></p>
+          </div>
+          <div class="w3f-field">
+            <label for="c-adjphone">Adjuster&rsquo;s Phone #</label>
+            <input id="c-adjphone" name="18 Insurance · Adjuster's Phone #" type="tel" aria-describedby="c-adjphone-err" />
+            <p class="w3f-err" id="c-adjphone-err"></p>
+          </div>
+        </div>
+        <div class="w3f-grid two">
+          <div class="w3f-field">
+            <label for="c-adjemail">Adjuster&rsquo;s Email</label>
+            <input id="c-adjemail" name="19 Insurance · Adjuster's Email" type="email" aria-describedby="c-adjemail-err" />
+            <p class="w3f-err" id="c-adjemail-err"></p>
+          </div>
+          <div class="w3f-field">
+            <label for="c-adjfax">Adjuster&rsquo;s Fax #</label>
+            <input id="c-adjfax" name="20 Insurance · Adjuster's Fax #" type="tel" aria-describedby="c-adjfax-err" />
+            <p class="w3f-err" id="c-adjfax-err"></p>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="w3f-section">
+        <legend>Photographs Of The Damage</legend>
+        {PRO_PLAN
+          ? <div class="w3f-field">
+              <label for="c-photo">Photograph of the damage</label>
+              <input id="c-photo" name="attachment" type="file" accept="image/*" aria-describedby="c-photo-hint" />
+              <p class="w3f-hint" id="c-photo-hint">One photograph, up to 5MB. Shot at an angle with light running across the panel &mdash; dents read better that way. Email any others to <a href="mailto:airbornepdr@gmail.com">airbornepdr@gmail.com</a>.</p>
+              <p class="w3f-err" id="c-photo-err"></p>
+            </div>
+          : <p class="w3f-hint">This form cannot take attachments yet. Email your photographs to <a href="mailto:airbornepdr@gmail.com">airbornepdr@gmail.com</a> with your name in the subject and we will match them to your check-in.</p>}
+      </fieldset>
+
+      <div class="h-captcha" data-captcha="true"></div>
+
+      <div class="w3f-actions">
+        <div class="w3f-note w3f-note-tight">
+          <p><strong>This is a check-in, not an authorization.</strong> Nothing is booked and no repair is approved. We&rsquo;ll go through everything with you at the shop and you&rsquo;ll sign the repair authorization there. Bring your driver&rsquo;s licence and your insurance card.</p>
+        </div>
+        {live
+          ? <button class="btn btn-solid" type="submit">Send my check-in <span aria-hidden="true">&rarr;</span></button>
+          : <p class="w3f-unconfigured"><strong>This form is not connected yet.</strong> Its Web3Forms access key is still a
+              placeholder. Call <a href="tel:+16822260543">682-226-0543</a> or email
+              <a href="mailto:airbornepdr@gmail.com">airbornepdr@gmail.com</a>.</p>}
+        <p class="w3f-legal">
+          We use what you send here to prepare your paperwork and carry out the work, nothing else.
+          See our <a href="/privacy">privacy policy</a> and <a href="/terms">terms</a>.
+          We never ask for your driver&rsquo;s licence number, date of birth, VIN, policy number or
+          card details on this website &mdash; those are handled in person at the shop.
+        </p>
+      </div>
+
+      <div class="w3f-result" id="checkin-result" role="status" aria-live="polite" tabindex="-1" hidden></div>
+    </form>
+  </div>
+</section>
+
+<section>
+  <div class="wrap sec-head lead">
+    <p class="eyebrow eyebrow-olive rv">Not Booked Yet?</p>
+    <h2 class="display h-lg rv rv-d1">Start With An Estimate.</h2>
+    <p class="prose rv rv-d2" style="margin-top:1rem">This page is for people who have already arranged to bring a vehicle in. If you are still finding out what the damage will take, send us photographs and we will tell you what you are looking at.</p>
+    <p class="rv rv-d2" style="margin-top:1.25rem">
+      <a class="btn btn-solid" href="/contact">Get a free estimate <span aria-hidden="true">&rarr;</span></a>
+    </p>
+  </div>
+</section>
+
+</main>
+</Base>

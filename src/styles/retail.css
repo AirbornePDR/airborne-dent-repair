@@ -115,6 +115,7 @@ section{padding-block:var(--rhythm)}
    here, above the component rules, so the responsive multi-column media queries still win. */
 .sec-head,.services,.svc,.svc-body,.steps,.step,.gallery,.cat,.cat-list,.intro,
 .w3f,.w3f-grid,.w3f-field,.w3f-choices,.w3f-actions,.w3f-result,.w3f fieldset,.legal-doc,
+.w3f-section,.w3f-note,
 .final-grid,.contact-block,.foot-grid,.foot-col,.needs-input,.cross,
 .facts,.detail,.detail-list,.detail-list li,.others,.other{
   grid-template-columns:minmax(0,1fr);
@@ -419,7 +420,33 @@ section{padding-block:var(--rhythm)}
   outline:1px solid var(--olive-lift);outline-offset:1px;border-color:var(--olive-lift);
 }
 .w3f [aria-invalid="true"]{border-color:#E0785A}
+/* Section blocks on /check-in, mirroring the bars on the paper Repair Order so
+   the printed notification and the paper form read in the same order. */
+.w3f-section{display:grid;gap:1.15rem;padding-top:.4rem}
+.w3f-section+.w3f-section{margin-top:.9rem;border-top:1px solid var(--hair);padding-top:1.9rem}
+.w3f-section>legend{
+  font-weight:500;font-size:.66rem;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--olive-lift);padding:0 0 .2rem;
+}
+/* the statement above the submit button, and its twin at the top of the page */
+.w3f-note{
+  border-left:2px solid var(--olive-lift);background:var(--ink-2);
+  padding:1.1rem 1.25rem;max-width:70ch;
+}
+.w3f-note p{margin:0;font-size:.92rem;color:var(--bone-dim);line-height:1.6}
+.w3f-note strong{color:var(--bone)}
+.w3f-note-tight{max-width:none}
+.w3f input[type=file]{
+  font:inherit;font-size:.9rem;color:var(--bone-dim);background:var(--ink-2);
+  border:1px solid var(--hair);padding:.6rem .7rem;width:100%;min-width:0;
+}
+.w3f input[type=file]::file-selector-button{
+  font:inherit;font-weight:500;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;
+  margin-right:.9rem;padding:.5rem .9rem;cursor:pointer;
+  background:transparent;color:var(--bone);border:1px solid var(--hair-strong);
+}
 .w3f-hint{font-size:.78rem;color:#7C8173;margin:0}
+.w3f-hint a{color:var(--bone-dim);text-underline-offset:3px}
 .w3f-err{font-size:.78rem;color:#E0785A;margin:0}
 .w3f-err:empty{display:none}
 .w3f-choices{display:grid;gap:.55rem}

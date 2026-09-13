@@ -25,8 +25,29 @@ const srv = http.createServer((q, r) => {
 await new Promise((r) => srv.listen(4410, '127.0.0.1', r));
 const BASE = 'http://127.0.0.1:4410';
 
-const PAGES = ['/', '/services', '/wholesale', '/about', '/contact', '/privacy', '/terms',
+const PAGES = ['/', '/services', '/wholesale', '/about', '/contact', '/check-in', '/privacy', '/terms',
   '/hail-damage-repair', '/paintless-dent-repair', '/windshield-replacement', '/window-tint'];
+
+// Fields this website must never collect. These belong on paper, signed in person
+// at the shop: they are the identity and payment details that make a form a target
+// and a breach expensive, and the paper Repair Order already captures them with a
+// human present. Matched against every input's name, id, placeholder and its
+// label text, on every page.
+//
+// Word-bounded on purpose — a bare /vin/ would fire on "moving" and "driving".
+const FORBIDDEN = [
+  [/\bvin\b|vehicle identification/i, 'VIN'],
+  [/\b(licence|license)\s*plate\b|\bplate\s*(no|number|#)/i, 'License Plate'],
+  [/\bpolicy\s*(no|number|#)|\bpolicy#/i, 'Policy number'],
+  [/\bdriver'?s?\s*(licence|license)\b|\bdl\s*(no|number|#)/i, "Driver's License"],
+  [/\bbirth\s*date\b|\bdate\s*of\s*birth\b|\bdob\b|\bbirthdate\b/i, 'Birth date'],
+  [/\bcard\s*(no|number|#)|\bcredit\s*card\b|\bcc\s*(no|number)\b/i, 'Card number'],
+  [/\bexpir(y|ation)\b|\bexp\s*(date|\.|:)/i, 'Card expiry'],
+  [/\bcvv\b|\bcvc\b|\bsecurity\s*code\b/i, 'CVV / security code'],
+  [/\bsignature\b|\bsign\s*here\b/i, 'Signature'],
+  [/\brepair\s*order\s*(no|number|#)/i, 'Repair Order # (the shop assigns it)'],
+  [/\bestimate\s*date\b/i, 'Estimate Date (the shop assigns it)'],
+];
 
 // Reference documents, not conversion pages. They are reached from the footer and
 // their job is to be read, so they are not required to carry a CTA.
@@ -83,14 +104,41 @@ const browser = await chromium.launch({ args: ['--autoplay-policy=no-user-gestur
       `${p} has a mailto styled as a button`,
       mailButtons.map((m) => (m.primary ? 'PRIMARY ' : 'btn ') + m.text).join(' | '));
 
-    // (2) every page offers a route to a form, either by linking to a page that
-    // has one or by anchoring to a section on this page that contains one.
+    // (2) every page offers a route to a form: it carries one itself, links to a
+    // page that has one, or anchors to a section on this page that contains one.
     if (!NO_CTA_REQUIRED.has(p)) {
+      const ownForm = await pg.evaluate(() => !!document.querySelector('form[data-w3f]'));
       const routes = cta.filter((c) =>
         /^\/(contact|wholesale)\/?$/.test(c.href) || c.reachesForm);
-      ok(routes.length > 0,
+      ok(ownForm || routes.length > 0,
         `${p} has no CTA that reaches a form`,
         cta.map((c) => c.href).join(' | '));
+    }
+
+    // (4) no page may collect the identity or payment details that belong on
+    // paper. Checks name, id, placeholder and the visible label text.
+    const offenders = await pg.evaluate(() => {
+      const out = [];
+      for (const el of document.querySelectorAll('input,select,textarea')) {
+        if (el.type === 'hidden' && el.name === 'access_key') continue;
+        let labelText = '';
+        if (el.id) {
+          const l = document.querySelector('label[for="' + CSS.escape(el.id) + '"]');
+          if (l) labelText = l.textContent;
+        }
+        const wrap = el.closest('label');
+        if (wrap) labelText += ' ' + wrap.textContent;
+        const fs = el.closest('fieldset');
+        const lg = fs && fs.querySelector(':scope > legend');
+        if (lg) labelText += ' ' + lg.textContent;
+        out.push({ probe: [el.name, el.id, el.placeholder, labelText].filter(Boolean).join(' ⁞ ') });
+      }
+      return out;
+    });
+    for (const [re, label] of FORBIDDEN) {
+      const hit = offenders.filter((o) => re.test(o.probe));
+      ok(hit.length === 0, `${p} collects a forbidden field: ${label}`,
+        hit.map((h) => h.probe.slice(0, 80)).join(' | '));
     }
 
     // (3) an in-page anchor CTA must actually resolve to a section that has a
@@ -223,7 +271,21 @@ for (const w of [390, 768, 1000, 1280, 1440]) {
           const bg = getComputedStyle(e).backgroundImage;
           return bg && bg !== 'none' && !e.getAttribute('aria-label');
         }).length,
-        deductible: /deductible|out of pocket/i.test(document.body.innerText),
+        // The word "deductible" is allowed — /check-in has a Deductible Amount
+        // field so the shop knows the number. What stays blocked pending the
+        // owner's attorney is any suggestion it can be reduced, covered, waived
+        // or assisted with. Match the claim, not the noun.
+        deductible: [
+          /\bno\s+deductible\b/i,
+          /\bzero\s+deductible\b/i,
+          /\$\s*0\s*deductible\b/i,
+          /\bdeductible[-\s]free\b/i,
+          /\bwaiv\w*\s+(your\s+|the\s+)?deductible\b/i,
+          /\b(cover|covers|covered|covering|pay|pays|paying|paid|reduce|reduces|reduced|lower|lowers|discount\w*|absorb\w*)\s+(your\s+|the\s+)?deductible\b/i,
+          /\bdeductible\s+(assistance|help|relief|coverage|waiver|discount|rebate|forgiven\w*)\b/i,
+          /\bhelp\s+(you\s+)?with\s+(your\s+)?deductible\b/i,
+          /\bout[-\s]of[-\s]pocket\b/i,
+        ].some((re) => re.test(document.body.innerText)),
         withheld: /CRR|Waxahachie/i.test(H),
         staleHost: /vercel\.app|example\.com/i.test(H),
         placeholderKey: /PASTE_|not connected yet/i.test(H),
@@ -239,7 +301,7 @@ for (const w of [390, 768, 1000, 1280, 1440]) {
     ok(!r.broken, `${at} has broken images`, String(r.broken));
     ok(!r.noalt, `${at} has an image with no alt`, String(r.noalt));
     ok(!r.unlabelled, `${at} has an unlabelled background tile`, String(r.unlabelled));
-    ok(!r.deductible, `${at} mentions deductibles (blocked pending the owner's attorney)`);
+    ok(!r.deductible, `${at} claims the deductible can be reduced, covered or waived (blocked pending the owner's attorney)`);
     ok(!r.withheld, `${at} leaks the withheld partner name`);
     ok(!r.staleHost, `${at} contains a stale host`);
     ok(!r.placeholderKey, `${at} still shows a placeholder form key`);

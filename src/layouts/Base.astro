@@ -224,6 +224,20 @@ const BUSINESS = {
           return;
         }
 
+        // Web3Forms caps a single attachment at 5MB. Catching it here gives a
+        // clear message instead of a server rejection the customer cannot read.
+        const fileEl = form.querySelector('input[type="file"]');
+        if (fileEl && fileEl.files && fileEl.files[0] && fileEl.files[0].size > 5 * 1024 * 1024) {
+          const mb = (fileEl.files[0].size / 1048576).toFixed(1);
+          setError(fileEl, 'That photograph is ' + mb + 'MB. The limit is 5MB — send it by email instead.');
+          show('bad', '<p><strong>That photograph is too large.</strong> The limit is 5MB. Send the ' +
+            'check-in without it and email the photograph to <a href="mailto:' +
+            form.getAttribute('data-fallback-email') + '">' + form.getAttribute('data-fallback-email') +
+            '</a>.</p>');
+          fileEl.focus();
+          return;
+        }
+
         // Only block on the captcha if it actually rendered. If hCaptcha was
         // blocked or failed to load there is no widget to complete, and refusing
         // to submit would strand the person with no way through — let it go and
@@ -237,20 +251,49 @@ const BUSINESS = {
           return;
         }
 
-        // Duplicate keys (checkbox groups) collapse into one comma-joined value
-        // rather than the last one silently winning.
-        const payload = {};
-        new FormData(form).forEach((value, key) => {
-          payload[key] = key in payload ? payload[key] + ', ' + value : value;
-        });
+        // A file attachment has to go as multipart/form-data, not JSON. The form
+        // declares which it is, so there is one branch rather than a guess based
+        // on whether the customer happened to pick a file.
+        const multipart = (form.getAttribute('enctype') || '').indexOf('multipart') !== -1;
+
+        // Subject template, e.g. "Check-in — {name} — {vehicle}". The values come
+        // from inputs tagged data-subject-key.
+        let subject = form.getAttribute('data-subject');
+        if (subject) {
+          form.querySelectorAll('[data-subject-key]').forEach((el) => {
+            const v = (el.value || '').trim();
+            subject = subject.replace('{' + el.getAttribute('data-subject-key') + '}', v || '—');
+          });
+        }
+        // Web3Forms defaults reply-to to a field literally named "email". These
+        // forms number their field names, so point it at the right one by hand.
+        const replyEl = form.querySelector('[data-replyto]');
+        const replyto = replyEl && replyEl.value.trim() ? replyEl.value.trim() : '';
+
+        let body, headers;
+        if (multipart) {
+          body = new FormData(form);
+          if (subject) body.set('subject', subject);
+          if (replyto) body.set('replyto', replyto);
+          headers = { Accept: 'application/json' }; // let the browser set the boundary
+        } else {
+          // Duplicate keys (checkbox groups) collapse into one comma-joined value
+          // rather than the last one silently winning.
+          const payload = {};
+          new FormData(form).forEach((value, key) => {
+            payload[key] = key in payload ? payload[key] + ', ' + value : value;
+          });
+          if (subject) payload.subject = subject;
+          if (replyto) payload.replyto = replyto;
+          body = JSON.stringify(payload);
+          headers = { 'Content-Type': 'application/json', Accept: 'application/json' };
+        }
 
         submit.disabled = true;
         submit.textContent = 'Sending…';
         try {
           const res = await fetch('https://api.web3forms.com/submit', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-            body: JSON.stringify(payload),
+            method: 'POST', headers, body,
           });
           let data = {};
           try { data = await res.json(); } catch (err) {}

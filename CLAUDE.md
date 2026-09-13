@@ -303,10 +303,11 @@ goes to `tel:`.** Nothing else is a button.
 each bug into the built output and confirming the suite went red — an assertion
 that has never failed is decoration.
 
-## The two forms
+## The three forms
 
 Retail estimate on `/contact` → `airbornepdr@gmail.com`. Wholesale & claims on
-`/wholesale` → `Claimsairbornedentrepair@gmail.com`. Both post to **Web3Forms**
+`/wholesale` → `Claimsairbornedentrepair@gmail.com`. Pre-arrival check-in on
+`/check-in` → `airbornepdr@gmail.com`. All three post to **Web3Forms**
 from the browser, so **the site is still fully static** — no adapter, no SSR, no
 serverless function. Keep it that way.
 
@@ -337,6 +338,41 @@ loads nothing external. The privacy policy says so, and it has to stay true.
 **Do not put deductible copy on these forms** — no "we help with your deductible",
 no "no out of pocket". Still blocked pending the owner's attorney (rule 4).
 
+### `/check-in` specifically
+
+It mirrors the paper **Repair Order / Direction of Payment** so the printed
+notification transcribes one-to-one. Section headings and field order match the
+paper form exactly; keep them in step if that form changes.
+
+- **It is not a second estimate form and must never be a primary CTA.** It is a
+  link the shop sends to someone who has already booked. `/contact` links to it as
+  a plain text line under the estimate form, and that is the only entry point.
+- **No legal language on it at all.** Nothing from the Repair Authorization,
+  Direction of Payment, Storage/Administrative or Marketing Consent sections. No
+  consent checkbox, no acknowledgment tick, no attestation. Those are signed in
+  person and are pending attorney review.
+- Field `name` attributes are numbered and section-prefixed (`09 Vehicle · Year /
+  Make`). Web3Forms emails one row per field and its docs promise no ordering, so
+  the numbers force the printout into paper-form order however it sorts.
+- The subject is built client-side from `data-subject` on the form plus
+  `data-subject-key` on two inputs: `Check-in — {name} — {vehicle}`. Web3Forms has
+  no server-side templating, so this is the only way to get a dynamic subject.
+- Reply-to is set from the input marked `data-replyto`, because Web3Forms only
+  auto-detects a field literally named `email` and these are numbered.
+
+**The required statement appears twice on the page** — once near the top and once
+directly above the submit button — and again in the success message after a
+successful send:
+
+> This is a check-in, not an authorization. Nothing is booked and no repair is
+> approved. We'll go through everything with you at the shop and you'll sign the
+> repair authorization there. Bring your driver's licence and your insurance card.
+
+**It is not yet in the autoresponder**, because the autoresponder is Pro-only and
+is configured in the Web3Forms dashboard rather than in this repo. When the account
+goes Pro, paste that paragraph into the autoresponder Intro Text for the retail
+form. Nothing in the codebase can do it for you.
+
 ## Privacy and terms
 
 `/privacy` and `/terms` exist because the forms collect names and phone numbers.
@@ -355,14 +391,36 @@ that breaks it, not in a follow-up:
 
 | Page | Sentence | Broken by |
 |---|---|---|
-| `/privacy` | "Neither form accepts file or photo uploads." | **Shipping photo upload.** |
+| `/privacy` | "None of the three forms accepts file or photo uploads." | **Setting `PRO_PLAN = true`.** That switches on the photo field on `/check-in`. |
+| `/privacy` | "If we ask you for photographs, we ask you to email them." | The same flag. Both `/check-in` and the other two forms' copy change with it. |
+| `/privacy` | "Only what you type into a form on this site, and only on the **three** pages that have one." | Adding or removing a form. |
+| `/privacy` | The **three** lists of exact form fields. | Adding, renaming or removing any field on any of the three forms. |
+| `/privacy` | "hCaptcha runs on all **three** forms… loads only on the **three** pages that have a form." | Adding or removing a form. |
+| `/privacy` | The "What we deliberately do not collect" list. | Any new field. `verify:site` enforces this one mechanically — see below. |
 | `/privacy` | "We have not added Google Analytics or any other tracking or advertising service." | Adding any analytics, including Vercel Analytics, which is off by default but one toggle away. |
-| `/privacy` | The two lists of exact form fields. | Adding, renaming or removing any field on either form. |
 | `/terms` | "Photographs of repairs on this site are of work carried out." | Publishing a repair photo that is not this shop's job. Rule 2 already forbids that. |
 
-The first one is the live risk: photo upload is the next thing anyone will build on
-these forms, both forms currently advertise that they do not take attachments, and
-the privacy policy states it as fact.
+The live risk is the first two: Pro is planned, and flipping the flag silently makes
+two published sentences false. Change `/privacy` in the same commit as the flag.
+
+## Fields this site must never collect
+
+Driver's licence numbers, dates of birth, VINs, licence plate numbers, insurance
+policy numbers, card numbers, expiry dates, security codes, signatures. Also the
+shop-assigned fields: Repair Order #, Estimate Date, Representative.
+
+These are on the paper Repair Order and they stay there, taken in person with a
+human present. They are what turns a form into a target and a breach into an
+expensive one, and none of them helps the shop before the customer arrives.
+
+**`npm run verify:site` enforces this across every page**, matching each input's
+`name`, `id`, `placeholder`, its `<label>` text and its `<fieldset>` legend. It is
+word-bounded, so a bare "vin" does not fire on "moving" — if you add a field and the
+suite goes red, the field is the problem, not the check.
+
+The word *deductible* is allowed: `/check-in` has a Deductible Amount field so the
+shop knows the number. What stays blocked is any claim it can be reduced, covered,
+waived or assisted with, and `verify:site` matches the claim rather than the noun.
 
 ## The before/after sliders
 
