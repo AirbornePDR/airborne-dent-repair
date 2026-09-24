@@ -1,4 +1,5 @@
 ---
+import { SHOW_BUILD_NOTES } from '../data/build-notes';
 import Base from '../layouts/Base.astro';
 import '../styles/retail.css';
 ---
@@ -94,7 +95,7 @@ import '../styles/retail.css';
       <li>
         <strong>Whether the paint is broken</strong>
         <span>If the finish is cracked or chipped through to the metal, that panel is not a paintless candidate. We will say so at the estimate rather than working around it.</span>
-        <span class="chip blocked">Confirm: conventional repair &mdash; in-house or referral</span>
+        {SHOW_BUILD_NOTES && <span class="chip blocked">Confirm: conventional repair &mdash; in-house or referral</span>}
       </li>
       <li>
         <strong>The estimate, documented</strong>

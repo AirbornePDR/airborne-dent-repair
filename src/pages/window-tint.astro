@@ -1,4 +1,5 @@
 ---
+import { SHOW_BUILD_NOTES } from '../data/build-notes';
 import Base from '../layouts/Base.astro';
 import '../styles/retail.css';
 ---
@@ -93,17 +94,17 @@ import '../styles/retail.css';
       <li>
         <strong>There is a legal limit</strong>
         <span>Texas regulates how much light the front side windows have to let through, and where a windshield strip is allowed to start. We will walk you through what is legal before anything gets cut.</span>
-        <span class="chip blocked">Confirm: VLT options offered</span>
+        {SHOW_BUILD_NOTES && <span class="chip blocked">Confirm: VLT options offered</span>}
       </li>
       <li>
         <strong>Which XPEL line</strong>
         <span>XPEL makes several tint films at different price and performance points.</span>
-        <span class="chip blocked">Confirm: XPEL film lines offered</span>
+        {SHOW_BUILD_NOTES && <span class="chip blocked">Confirm: XPEL film lines offered</span>}
       </li>
       <li>
         <strong>Paint protection film</strong>
         <span>XPEL is as well known for clear paint protection film as it is for tint.</span>
-        <span class="chip blocked">Confirm: XPEL PPF offered as well as tint</span>
+        {SHOW_BUILD_NOTES && <span class="chip blocked">Confirm: XPEL PPF offered as well as tint</span>}
       </li>
       <li>
         <strong>Cure time</strong>

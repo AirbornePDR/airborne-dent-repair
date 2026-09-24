@@ -90,19 +90,19 @@ const BUSINESS = {
     // So the container takes the pointer input and writes the value back into the
     // range. One code path for mouse, touch and pen, and a touch anywhere on the
     // image works.
-    document.querySelectorAll('[data-ba]').forEach((ba) => {
-      const range = ba.querySelector('.ba-range');
-      if (!range) return;
-      const paint = () => ba.style.setProperty('--split', range.value + '%');
+    // One driver, used by both the before/after sliders and the inspection-light
+    // reader. Shared rather than copied: the iOS behaviour above was expensive to
+    // work out and a second hand-rolled copy would drift away from it.
+    const attachScrub = (el, range, paint, pointerClass) => {
       range.addEventListener('input', paint);
       paint();
 
       // No PointerEvent means something very old; leave the native range in charge.
-      if (!window.PointerEvent) return;
-      ba.classList.add('ba-pointer');
+      if (!window.PointerEvent) return null;
+      el.classList.add(pointerClass);
 
       const setFromX = (clientX) => {
-        const r = ba.getBoundingClientRect();
+        const r = el.getBoundingClientRect();
         if (!r.width) return;
         const pct = ((clientX - r.left) / r.width) * 100;
         range.value = Math.max(0, Math.min(100, pct));
@@ -110,11 +110,13 @@ const BUSINESS = {
       };
 
       let id = null, startX = 0, dragging = false;
+      const state = { touched: false };
 
-      ba.addEventListener('pointerdown', (e) => {
+      el.addEventListener('pointerdown', (e) => {
         if (e.button > 0) return;
         id = e.pointerId; startX = e.clientX; dragging = false;
-        try { ba.setPointerCapture(id); } catch (err) {}
+        state.touched = true;
+        try { el.setPointerCapture(id); } catch (err) {}
         // A mouse press has no competing gesture, so it can move the handle at
         // once. A finger might be starting a vertical scroll, so wait until the
         // drag is actually sideways before grabbing anything -- otherwise the
@@ -122,7 +124,7 @@ const BUSINESS = {
         if (e.pointerType === 'mouse') { dragging = true; setFromX(e.clientX); }
       });
 
-      ba.addEventListener('pointermove', (e) => {
+      el.addEventListener('pointermove', (e) => {
         if (e.pointerId !== id) return;
         if (!dragging && Math.abs(e.clientX - startX) < 4) return;
         dragging = true;
@@ -132,12 +134,58 @@ const BUSINESS = {
       const release = (e) => {
         if (e.pointerId !== id) return;
         if (!dragging) setFromX(e.clientX); // a tap moves the handle to the tap
-        try { ba.releasePointerCapture(id); } catch (err) {}
+        try { el.releasePointerCapture(id); } catch (err) {}
         id = null; dragging = false;
       };
-      ba.addEventListener('pointerup', release);
+      el.addEventListener('pointerup', release);
       // fires when the browser takes the gesture for scrolling; leave the value alone
-      ba.addEventListener('pointercancel', () => { id = null; dragging = false; });
+      el.addEventListener('pointercancel', () => { id = null; dragging = false; });
+      range.addEventListener('keydown', () => { state.touched = true; });
+      return state;
+    };
+
+    document.querySelectorAll('[data-ba]').forEach((ba) => {
+      const range = ba.querySelector('.ba-range');
+      if (!range) return;
+      attachScrub(ba, range, () => ba.style.setProperty('--split', range.value + '%'), 'ba-pointer');
+    });
+
+    // The inspection light. Same scrub driver as the sliders, different paint: the
+    // boundary between the two photographs is a band of light rather than a hard
+    // edge -- ahead of it the damage, behind it the repair, which is exactly how a
+    // panel is read in the bay before anyone touches it.
+    document.querySelectorAll('[data-reveal]').forEach((el) => {
+      const range = el.querySelector('.reveal-range');
+      if (!range) return;
+      const state = attachScrub(el, range, () => el.style.setProperty('--x', range.value + '%'), 'reveal-pointer');
+      if (!state) return;
+
+      // Nobody drags something they do not know is draggable. Sweep it once when
+      // it first comes into view, then stop for good on the first real input.
+      // Reduced motion gets no sweep at all -- the control still works.
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      if (!('IntersectionObserver' in window)) return;
+
+      let played = false;
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((en) => {
+          if (!en.isIntersecting || played || state.touched) return;
+          played = true;
+          io.disconnect();
+          const from = parseFloat(range.value), to = 78;
+          const start = performance.now(), dur = 1600;
+          const step = (now) => {
+            if (state.touched) return;               // a real hand always wins
+            const t = Math.min(1, (now - start) / dur);
+            const eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+            range.value = from + (to - from) * eased;
+            el.style.setProperty('--x', range.value + '%');
+            if (t < 1) requestAnimationFrame(step);
+          };
+          requestAnimationFrame(step);
+        });
+      }, { threshold: 0.45 });
+      io.observe(el);
     });
 
     // Autoplaying loops are motion too. CSS cannot stop a video that has

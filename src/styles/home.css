@@ -242,6 +242,67 @@ section{padding-block:var(--rhythm)}
 .svc:hover .go{gap:.9em}
 .go span{transition:margin .25s}
 
+/* ---------- the inspection light ----------
+   A before/after comparison where the boundary is a band of light rather than a
+   hard edge. Ahead of the light, the panel as it came in; behind it, the same
+   panel repaired. That is not decoration — running a light down a panel is
+   literally how a technician finds hail before quoting it, so the control and the
+   craft are the same gesture.
+
+   The damaged side is very slightly flattened, the way a dented panel looks under
+   even light, so the moving edge does the revealing. Pushed any harder it hazes
+   the whole photograph and starts to look like a trick; this was tested and backed
+   off deliberately.
+
+   Driven by the shared scrub handler in Base.astro, so it inherits the iOS pointer
+   fix the before/after sliders needed. */
+.reveal{
+  position:relative;overflow:hidden;isolation:isolate;
+  border:1px solid var(--hair);background:var(--ink-2);--x:42%;
+  touch-action:pan-y;-webkit-user-select:none;user-select:none;
+  -webkit-tap-highlight-color:transparent;
+}
+.reveal-pointer{cursor:ew-resize}
+.reveal-pointer .reveal-range{pointer-events:none}
+.reveal-after,.reveal-before{
+  position:absolute;inset:0;background-size:cover;background-position:center;background-repeat:no-repeat;
+}
+.reveal-before{
+  clip-path:inset(0 calc(100% - var(--x)) 0 0);
+  filter:brightness(.86) contrast(.93) saturate(.9);
+}
+.reveal-glow{
+  position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;
+  background:linear-gradient(90deg,transparent calc(var(--x) - 10%),rgba(249,249,250,.05) calc(var(--x) - 3.5%),rgba(249,249,250,.15) var(--x),rgba(249,249,250,.05) calc(var(--x) + 3.5%),transparent calc(var(--x) + 10%));
+}
+.reveal-bar{
+  position:absolute;top:0;bottom:0;left:var(--x);width:2px;transform:translateX(-1px);
+  pointer-events:none;
+  background:linear-gradient(to bottom,transparent,rgba(249,249,250,.94) 9%,rgba(249,249,250,.94) 91%,transparent);
+  box-shadow:0 0 22px 3px rgba(249,249,250,.24);
+}
+.reveal-tag{
+  position:absolute;bottom:0;z-index:2;pointer-events:none;
+  font-weight:500;font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;
+  margin:.75rem;padding:.4rem .65rem;
+  background:rgba(2,3,3,.75);border:1px solid var(--hair);color:var(--bone);
+}
+.reveal-tag.is-before{left:0}
+.reveal-tag.is-after{right:0}
+.reveal-range{
+  position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:ew-resize;
+  -webkit-appearance:none;appearance:none;background:transparent;touch-action:pan-y;
+}
+.reveal-range::-webkit-slider-thumb{-webkit-appearance:none;width:56px;height:100%}
+.reveal-range::-moz-range-thumb{width:56px;height:100%;border:0;background:transparent}
+.reveal:has(.reveal-range:focus-visible){outline:1px solid var(--olive-lift);outline-offset:3px}
+.reveal-cap{
+  display:flex;flex-wrap:wrap;justify-content:space-between;gap:.4rem 1rem;
+  margin-top:.65rem;font-size:.76rem;color:var(--bone-dim);
+}
+.reveal-rail{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(2rem,4vw,3rem)}
+.reveal-half{max-width:min(100%,780px)}
+
 /* ---------- before / after ---------- */
 .ba-rail{display:grid;gap:clamp(2rem,4vw,3rem)}
 .ba-half{max-width:min(100%,780px)}
@@ -310,14 +371,15 @@ section{padding-block:var(--rhythm)}
   .area{grid-template-columns:1.05fr .95fr;align-items:start}
 }
 .fleet-media{position:relative;overflow:hidden;border:1px solid var(--hair);aspect-ratio:910/510}
-/* three tiles, and never a half-empty row: one column until there is room for
-   all three, so the 1px grid background never shows through an empty cell */
+/* two tiles, and never a half-empty row: one column until there is room for both,
+   so the 1px grid background never shows through an empty cell. Column count
+   tracks tile count — change this if a tile is added or removed. */
 .fleet-stills{
   display:grid;gap:1px;background:var(--hair);border-block:1px solid var(--hair);
   grid-template-columns:minmax(0,1fr);margin-top:.85rem;
 }
 .fleet-stills-wrap{margin-top:clamp(2rem,5vw,3.5rem)}
-@media(min-width:760px){.fleet-stills{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(min-width:760px){.fleet-stills{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .fleet .slot{aspect-ratio:16/10}
 .vet .slot{aspect-ratio:4/5}
 .area .slot{aspect-ratio:5/4;align-items:center;justify-content:center}

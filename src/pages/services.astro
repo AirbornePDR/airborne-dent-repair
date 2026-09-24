@@ -1,4 +1,5 @@
 ---
+import { SHOW_BUILD_NOTES } from '../data/build-notes';
 import Base from '../layouts/Base.astro';
 import '../styles/retail.css';
 ---
@@ -72,7 +73,7 @@ import '../styles/retail.css';
   </a>
   <a class="svc rv rv-d2" href="/windshield-replacement">
     <span class="slot">
-      <span class="slot-tag">Photo needed &mdash; real windshield job</span>
+      {SHOW_BUILD_NOTES && <span class="slot-tag">Photo needed &mdash; real windshield job</span>}
     </span>
     <span class="svc-body">
       <h3>Windshield<br>Replacement</h3>

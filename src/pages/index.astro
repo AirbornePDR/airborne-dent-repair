@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import { SHOW_BUILD_NOTES } from '../data/build-notes';
 import '../styles/home.css';
 
 // TEMPORARY launch banner. Set to false (or delete this const and the block that
@@ -63,7 +64,7 @@ const WIP_BANNER = true;
         </div>
       </a>
       <a class="svc rv rv-d2" href="/windshield-replacement">
-        <div class="slot"><span class="slot-tag">[SERVICE-03] Windshield — needs a real shot</span></div>
+        <div class="slot">{SHOW_BUILD_NOTES && <span class="slot-tag">[SERVICE-03] Windshield — needs a real shot</span>}</div>
         <div class="svc-body">
           <h3>Windshield<br>Replacement</h3>
           <p>OEM-quality glass, mobile or in our shop — your call.</p>
@@ -85,32 +86,42 @@ const WIP_BANNER = true;
 <section id="work">
   <div class="wrap">
     <div class="sec-head rv">
-      <p class="eyebrow">Before &amp; After · Drag to compare</p>
-      <h2 class="display h-lg">The Damage Was Real.<br>Now Find It.</h2>
+      <p class="eyebrow">Drag The Light &middot; Both Of These Are Real Jobs</p>
+      <h2 class="display h-lg">You Can't Fix<br>What You Can't See.</h2>
+      <p class="prose">Hail hides in a reflection. A technician finds it by running a light down the panel &mdash; the dents only show up in the moving edge, and the whole repair gets planned from what that one pass reveals. Drag the light across this hood: ahead of it, the damage as the car came in. Behind it, the same panel on its original factory paint.</p>
     </div>
-    <div class="ba-rail">
-      <div class="ba-feature rv">
-        <div class="ba" data-ba>
-          <div class="ba-layer ba-before" style="background-image:url(&quot;/img/img-01601d4a77.jpeg&quot;)"><span class="ba-tag">Before</span></div>
-          <div class="ba-layer ba-after" style="background-image:url(&quot;/img/img-ea3b4a7cf7.jpeg&quot;)"><span class="ba-tag">After</span></div>
-          <div class="ba-handle"></div>
-          <input class="ba-range" type="range" min="0" max="100" value="42" aria-label="Compare hail damage before and after repair on a Mercedes-Benz C-Class hood">
+    <div class="reveal-rail">
+      <div>
+        <div class="reveal rv" data-reveal style="aspect-ratio:1200/767">
+          <div class="reveal-after" style="background-image:url(&quot;/img/img-ea3b4a7cf7.jpeg&quot;)" role="img"
+               aria-label="The same Mercedes-Benz C-Class hood after paintless repair, back to its original factory finish"></div>
+          <div class="reveal-before" style="background-image:url(&quot;/img/img-01601d4a77.jpeg&quot;)" aria-hidden="true"></div>
+          <div class="reveal-glow" aria-hidden="true"></div>
+          <div class="reveal-bar" aria-hidden="true"></div>
+          <span class="reveal-tag is-before" aria-hidden="true">Before</span>
+          <span class="reveal-tag is-after" aria-hidden="true">After</span>
+          <input class="reveal-range" type="range" min="0" max="100" value="42" step="0.1"
+                 aria-label="Drag the inspection light to compare hail damage before and after paintless repair on a Mercedes-Benz C-Class hood">
         </div>
-        <div class="ba-cap"><span>Hail damage · C-Class hood, roof and fender</span><span>Paintless — original factory finish</span></div>
+        <div class="reveal-cap"><span>Hail damage &middot; C-Class hood, roof and fender</span><span>Paintless &mdash; original factory finish</span></div>
       </div>
 
-      <div class="ba-half rv">
-        <p class="eyebrow" style="margin-bottom:.7rem">Window Tint · XPEL</p>
-        <div class="ba" data-ba>
-          <div class="ba-layer ba-before" style="background-image:url(&quot;/img/img-d658fbaced.jpeg&quot;)"><span class="ba-tag">No tint</span></div>
-          <div class="ba-layer ba-after" style="background-image:url(&quot;/img/img-f518ef14c1.jpeg&quot;)"><span class="ba-tag">Tinted</span></div>
-          <div class="ba-handle"></div>
-          <input class="ba-range" type="range" min="0" max="100" value="45" aria-label="Compare the same car with and without window tint">
+      <div class="reveal-half">
+        <p class="eyebrow rv" style="margin-bottom:.7rem">Window Tint &middot; XPEL</p>
+        <div class="reveal rv" data-reveal style="aspect-ratio:1000/530">
+          <div class="reveal-after" style="background-image:url(&quot;/img/img-f518ef14c1.jpeg&quot;)" role="img"
+               aria-label="The same vehicle with XPEL window tint fitted"></div>
+          <div class="reveal-before" style="background-image:url(&quot;/img/img-d658fbaced.jpeg&quot;)" aria-hidden="true"></div>
+          <div class="reveal-glow" aria-hidden="true"></div>
+          <div class="reveal-bar" aria-hidden="true"></div>
+          <span class="reveal-tag is-before" aria-hidden="true">No tint</span>
+          <span class="reveal-tag is-after" aria-hidden="true">Tinted</span>
+          <input class="reveal-range" type="range" min="0" max="100" value="45" step="0.1"
+                 aria-label="Drag the inspection light to compare the same car with and without window tint">
         </div>
-        <div class="ba-cap"><span>Same car, same light, same angle</span><span>XPEL film</span></div>
+        <div class="reveal-cap"><span>Same car, same light, same angle</span><span>XPEL film</span></div>
       </div>
     </div>
-    <p class="prose rv" style="margin-top:1.75rem;font-size:.88rem">Two pairs live, both real. Every pair on this page has to be an actual job — see the note below.</p>
   </div>
 </section>
 
@@ -158,21 +169,14 @@ const WIP_BANNER = true;
       <figure class="gal rv" style="margin:0">
         <img class="shot-img" src="/img/fleet-g63-and-lineup-1200.jpg"
              srcset="/img/fleet-g63-and-lineup-1200.jpg 1200w, /img/fleet-g63-and-lineup-2400.jpg 2400w"
-             sizes="(min-width:760px) 33vw, 100vw" width="1200" height="800" loading="lazy" decoding="async"
+             sizes="(min-width:760px) 50vw, 100vw" width="1200" height="800" loading="lazy" decoding="async"
              alt="A Mercedes-AMG G 63 at the head of a line of vehicles outside the shop">
         <figcaption>Mercedes-AMG G 63</figcaption>
       </figure>
       <figure class="gal rv rv-d1" style="margin:0">
-        <img class="shot-img" src="/img/fleet-g63-low-angle-1200.jpg"
-             srcset="/img/fleet-g63-low-angle-1200.jpg 1200w, /img/fleet-g63-low-angle-2400.jpg 2400w"
-             sizes="(min-width:760px) 33vw, 100vw" width="1200" height="800" loading="lazy" decoding="async"
-             alt="A Mercedes-AMG G 63 photographed low, showing its wheels and stance">
-        <figcaption>Wheels &amp; Stance</figcaption>
-      </figure>
-      <figure class="gal rv rv-d2" style="margin:0">
         <img class="shot-img" src="/img/fleet-lineup-golden-hour-1200.jpg"
              srcset="/img/fleet-lineup-golden-hour-1200.jpg 1200w, /img/fleet-lineup-golden-hour-2400.jpg 2400w"
-             sizes="(min-width:760px) 33vw, 100vw" width="1200" height="800" loading="lazy" decoding="async"
+             sizes="(min-width:760px) 50vw, 100vw" width="1200" height="800" loading="lazy" decoding="async"
              alt="A Mercedes-Benz S-Class coupe leading a line of vehicles outside the shop in warm evening light">
         <figcaption>Outside The Shop</figcaption>
       </figure>

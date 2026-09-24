@@ -1,4 +1,5 @@
 ---
+import { SHOW_BUILD_NOTES } from '../data/build-notes';
 import Base from '../layouts/Base.astro';
 import '../styles/retail.css';
 ---
@@ -18,7 +19,7 @@ import '../styles/retail.css';
     </ul>
   </div>
   <div class="hero-figure slot">
-    <span class="slot-tag hero-slot-tag">Photo needed &mdash; real windshield job</span>
+    {SHOW_BUILD_NOTES && <span class="slot-tag hero-slot-tag">Photo needed &mdash; real windshield job</span>}
   </div>
 </section>
 <div class="marquee" aria-hidden="true">
@@ -69,7 +70,7 @@ import '../styles/retail.css';
   <div class="wrap">
     <div class="ba-feature ba-half rv rv-d1">
       <div class="ba slot" style="aspect-ratio:1200/769;align-items:flex-end">
-        <span class="slot-tag">Photo needed &mdash; real windshield before &amp; after</span>
+        {SHOW_BUILD_NOTES && <span class="slot-tag">Photo needed &mdash; real windshield before &amp; after</span>}
       </div>
     </div>
   </div>
@@ -84,27 +85,27 @@ import '../styles/retail.css';
       <li>
         <strong>Mobile or in-shop</strong>
         <span>Both are offered. Mobile comes to your driveway or your office; in-shop gives us controlled conditions, which matters in wind, cold or rain.</span>
-        <span class="chip blocked">Confirm: mobile service radius</span>
+        {SHOW_BUILD_NOTES && <span class="chip blocked">Confirm: mobile service radius</span>}
       </li>
       <li>
         <strong>Chips and cracks</strong>
         <span>Some damage can be repaired rather than replaced, depending on size and where on the glass it sits.</span>
-        <span class="chip blocked">Confirm: chip repair offered, or replacement only</span>
+        {SHOW_BUILD_NOTES && <span class="chip blocked">Confirm: chip repair offered, or replacement only</span>}
       </li>
       <li>
         <strong>Driver assistance cameras</strong>
         <span>A camera mounted to the glass generally needs recalibrating after a replacement. Skipped, lane keeping and emergency braking can read the road wrong.</span>
-        <span class="chip blocked">Confirm: ADAS recalibration &mdash; in-house, sublet, or not offered</span>
+        {SHOW_BUILD_NOTES && <span class="chip blocked">Confirm: ADAS recalibration &mdash; in-house, sublet, or not offered</span>}
       </li>
       <li>
         <strong>Which glass goes in</strong>
         <span>OEM, OE-equivalent and aftermarket glass are not the same part at the same price, and you should know which one you are getting.</span>
-        <span class="chip blocked">Confirm: glass sourcing</span>
+        {SHOW_BUILD_NOTES && <span class="chip blocked">Confirm: glass sourcing</span>}
       </li>
       <li>
         <strong>Insurance</strong>
         <span>Glass is often handled differently from a body claim.</span>
-        <span class="chip blocked">Confirm: glass claims handled directly</span>
+        {SHOW_BUILD_NOTES && <span class="chip blocked">Confirm: glass claims handled directly</span>}
       </li>
     </ul>
   </div>

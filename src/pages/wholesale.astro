@@ -1,4 +1,5 @@
 ---
+import { SHOW_BUILD_NOTES } from '../data/build-notes';
 import Base from '../layouts/Base.astro';
 import { CLAIMS_ACCESS_KEY, isConfigured } from '../data/web3forms';
 import '../styles/wholesale.css';
@@ -101,7 +102,7 @@ const live = isConfigured(CLAIMS_ACCESS_KEY);
     <h3>Body &amp; Collision Shops</h3>
     <p>Paintless work sublet out so your booth stays on paint. We work to your estimate and your
       cycle time, not ours.</p>
-    <span class="chip blocked">Confirm: R&amp;I in-house or sublet</span>
+    {SHOW_BUILD_NOTES && <span class="chip blocked">Confirm: R&amp;I in-house or sublet</span>}
   </div>
   <div class="who rv rv-d2">
     <p class="n">03</p>
@@ -120,14 +121,14 @@ const live = isConfigured(CLAIMS_ACCESS_KEY);
     <h3>Insurance &amp; Claims</h3>
     <p>Estimates arrive documented and photographed per unit, so a file can be worked without a
       call back to the shop for the detail that was missing.</p>
-    <span class="chip blocked">Confirm: estimate platforms &amp; documentation process</span>
+    {SHOW_BUILD_NOTES && <span class="chip blocked">Confirm: estimate platforms &amp; documentation process</span>}
   </div>
   <div class="who rv rv-d2">
     <p class="n">06</p>
     <h3>Employers &amp; Property Managers</h3>
     <p>A storm crosses your parking lot and suddenly thirty employee vehicles are damaged.
       That is one conversation with us, not thirty.</p>
-    <span class="chip blocked">Confirm: on-site work at customer lots</span>
+    {SHOW_BUILD_NOTES && <span class="chip blocked">Confirm: on-site work at customer lots</span>}
   </div>
 </div>
 
@@ -159,7 +160,7 @@ const live = isConfigured(CLAIMS_ACCESS_KEY);
   </a>
   <a class="svc rv rv-d2" href="/windshield-replacement">
     <span class="slot">
-      <span class="slot-tag">Photo needed &mdash; real windshield job</span>
+      {SHOW_BUILD_NOTES && <span class="slot-tag">Photo needed &mdash; real windshield job</span>}
     </span>
     <span class="svc-body">
       <h3>Windshield &amp; Glass</h3>
@@ -204,7 +205,7 @@ const live = isConfigured(CLAIMS_ACCESS_KEY);
     <h3>We Pick Up</h3>
     <p>Pickup and delivery are part of the account. Nobody on your team spends a morning
       shuttling cars.</p>
-    <span class="chip blocked">Confirm: minimum units &amp; pickup radius</span>
+    {SHOW_BUILD_NOTES && <span class="chip blocked">Confirm: minimum units &amp; pickup radius</span>}
   </div>
   <div class="step rv rv-d3">
     <p class="n">04</p>
@@ -216,7 +217,7 @@ const live = isConfigured(CLAIMS_ACCESS_KEY);
     <p class="n">05</p>
     <h3>We Deliver Back</h3>
     <p>Vehicles return to your lot with per-unit photo documentation and the invoice.</p>
-    <span class="chip blocked">Confirm: billing terms</span>
+    {SHOW_BUILD_NOTES && <span class="chip blocked">Confirm: billing terms</span>}
   </div>
 </div>
 
@@ -252,20 +253,20 @@ const live = isConfigured(CLAIMS_ACCESS_KEY);
         <div><dt>Working capacity</dt><dd>Up to 25 vehicles / week</dd></div>
         <div><dt>Estimates</dt><dd>Free, every unit</dd></div>
         <div><dt>Turnaround</dt><dd>Quoted with your estimate</dd></div>
-        <div><dt>Typical turnaround, single unit</dt><dd class="pending">Confirm</dd></div>
+        {SHOW_BUILD_NOTES && <div><dt>Typical turnaround, single unit</dt><dd class="pending">Confirm</dd></div>}
         <div><dt>Pickup &amp; delivery</dt><dd>Offered</dd></div>
-        <div><dt>Minimum units for pickup</dt><dd class="pending">Confirm</dd></div>
+        {SHOW_BUILD_NOTES && <div><dt>Minimum units for pickup</dt><dd class="pending">Confirm</dd></div>}
         <div><dt>PDR warranty</dt><dd>Lifetime</dd></div>
         <div><dt>Tint warranty</dt><dd>XPEL manufacturer's</dd></div>
         <div><dt>Windshield service</dt><dd>Mobile &amp; in-shop</dd></div>
-        <div><dt>Wholesale rate structure</dt><dd class="pending">Confirm</dd></div>
-        <div><dt>Billing terms</dt><dd class="pending">Confirm</dd></div>
-        <div><dt>Certificate of insurance</dt><dd class="pending">Confirm</dd></div>
+        {SHOW_BUILD_NOTES && <div><dt>Wholesale rate structure</dt><dd class="pending">Confirm</dd></div>}
+        {SHOW_BUILD_NOTES && <div><dt>Billing terms</dt><dd class="pending">Confirm</dd></div>}
+        {SHOW_BUILD_NOTES && <div><dt>Certificate of insurance</dt><dd class="pending">Confirm</dd></div>}
       </dl>
-      <p class="hint" style="font-size:.76rem;color:#7C8173;margin-top:.9rem">
+      {SHOW_BUILD_NOTES && <p class="hint" style="font-size:.76rem;color:#7C8173;margin-top:.9rem">
         Rows marked <em>Confirm</em> are deliberately unwritten. They are answers only the owner
         can give, and a guess here is worse than a blank.
-      </p>
+      </p>}
     </div>
   </div>
 </section>

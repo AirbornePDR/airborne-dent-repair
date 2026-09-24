@@ -1,4 +1,5 @@
 ---
+import { SHOW_BUILD_NOTES } from '../data/build-notes';
 import Base from '../layouts/Base.astro';
 import '../styles/retail.css';
 ---
@@ -69,7 +70,7 @@ import '../styles/retail.css';
   <div class="wrap">
     <div class="ba-feature ba-half rv rv-d1">
       <div class="ba slot" style="aspect-ratio:1200/769;align-items:flex-end">
-        <span class="slot-tag">Photo needed &mdash; door ding before &amp; after pair</span>
+        {SHOW_BUILD_NOTES && <span class="slot-tag">Photo needed &mdash; door ding before &amp; after pair</span>}
       </div>
     </div>
   </div>
@@ -99,12 +100,12 @@ import '../styles/retail.css';
       <li>
         <strong>Aluminum panels</strong>
         <span>Aluminum moves differently under the tool than steel does, and it is on a lot of newer trucks and German metal.</span>
-        <span class="chip blocked">Confirm: aluminum panel capability</span>
+        {SHOW_BUILD_NOTES && <span class="chip blocked">Confirm: aluminum panel capability</span>}
       </li>
       <li>
         <strong>Where the paint is broken</strong>
         <span>If the finish is cracked through to primer or bare metal, paintless is not the answer, and you will hear that at the estimate.</span>
-        <span class="chip blocked">Confirm: conventional repair &mdash; in-house or referral</span>
+        {SHOW_BUILD_NOTES && <span class="chip blocked">Confirm: conventional repair &mdash; in-house or referral</span>}
       </li>
     </ul>
   </div>
