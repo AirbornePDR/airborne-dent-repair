@@ -204,8 +204,26 @@ and that chip has been removed.)
 partner's name was pulled rather than published with a chip attached — see rule 8.
 The chip lives with the withheld variant in `WITHHELD-COPY.md`, not on the page.
 
-**Still open (photo gaps):** `OWNER-PORTRAIT` — now slotted on `/about`, which is
-where it is most missed — a real windshield before/after pair, a door-ding
+**`OWNER-PORTRAIT` — closed.** `owner-portrait-fleet-1200.jpg`: the founder outside
+the shop with the S-Class coupe, GLE 63 and G 63 behind him. It fills the founder
+section on `/about` and the veteran section on `/`, both of which previously showed
+a placeholder.
+
+Three things about it worth not undoing:
+
+- **It ships at one size, not the usual `-1200`/`-2400` pair.** The source is
+  1206×715. A `-2400` would be an upscale — invented detail, not more detail. At
+  its largest it renders 596 CSS px on `/about`, so the 1200 covers a 2× display.
+  If a full-resolution original turns up, regenerate both sizes then.
+- **It is landscape and carries its own 1200/711 ratio.** The placeholder slot was
+  `aspect-ratio:4/5`; dropping this photo into that crop cuts the three cars out of
+  frame, which is half of what the photograph is for. `.portrait` exists in
+  `home.css` and `retail.css` for exactly this.
+- **The caption and alt text say nothing about loaners.** The fleet is in shot and
+  the tier rule still applies — this is the founder outside the shop, not a promise
+  about what a customer drives away in.
+
+**Still open (photo gaps):** a real windshield before/after pair, a door-ding
 before/after pair, the windshield service card shot, and the service-area map slot
 on the home page. Those placeholders are deliberately still visible on the site.
 
@@ -232,9 +250,15 @@ on tablet, or a sixth step — not a mechanical fix.
   image SEO: `img-01601d4a77.jpeg`, `img-d658fbaced.jpeg`, `img-ea3b4a7cf7.jpeg`,
   `img-f518ef14c1.jpeg`. Update the `<img src>` that references each.
 
-**Owner-blocked, can't be solved in code:** domain purchase, Google Business Profile
-verification, the open `[CONFIRM]` answers, owner portrait, windshield and door-ding
-before/after photos.
+**Owner-blocked, can't be solved in code:** Google Business Profile verification,
+the open `[CONFIRM]` answers, windshield and door-ding before/after photos.
+
+There is also a **second** owner photograph in the project that is deliberately
+unused: `Claude outputs/owner-service-photo.jpg`, gitignored, a service portrait of
+the founder in dress uniform. Whether a personal military photograph appears on a
+commercial site is the owner's call, not a design decision, and nobody has asked
+him. It is also low resolution and cropped from a print. Do not place it without
+his answer.
 
 ## The domain and everything that derives from it
 

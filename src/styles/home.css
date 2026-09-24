@@ -321,6 +321,15 @@ section{padding-block:var(--rhythm)}
 .fleet .slot{aspect-ratio:16/10}
 .vet .slot{aspect-ratio:4/5}
 .area .slot{aspect-ratio:5/4;align-items:center;justify-content:center}
+/* The owner portrait is landscape (1200x711). It carries its own ratio rather
+   than the 4/5 the placeholder slot used — a 4/5 crop cuts the fleet out of the
+   frame, which is half of what the photograph is for. */
+.portrait{position:relative;display:grid;grid-template-columns:minmax(0,1fr);gap:.65rem;min-width:0}
+.portrait>img{position:static;width:100%;height:auto;aspect-ratio:1200/711;object-fit:cover;display:block;background:var(--ink-2);border:1px solid var(--hair)}
+.portrait figcaption{
+  font-weight:500;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--bone-dim);
+}
+
 .fleet-copy{display:grid;gap:1.1rem;align-content:center}
 .fleet-copy p{margin-block:0}
 .area-inner{display:grid;gap:.5rem;text-align:center;padding:2rem;justify-items:center}

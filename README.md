@@ -129,7 +129,6 @@ canonicals for a placeholder host.
 - [ ] Whether the loaner partner may be named on the public site
 - [ ] A named person who watches the claims inbox after a storm — a form
       delivering into an inbox nobody reads is worse than no form
-- [ ] Owner portrait
 - [ ] Windshield and door-ding before/after photos (two service pages have
       placeholder-quality galleries until these land)
 

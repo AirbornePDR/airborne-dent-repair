@@ -389,6 +389,15 @@ section{padding-block:var(--rhythm)}
 .legal-doc .prose{max-width:none}
 .legal-doc a{color:var(--olive-lift);text-underline-offset:3px}
 
+/* The owner portrait is landscape (1200x711). It carries its own ratio rather
+   than the 4/5 the placeholder slot used — a 4/5 crop cuts the fleet out of the
+   frame, which is half of what the photograph is for. */
+.portrait{position:relative;display:grid;grid-template-columns:minmax(0,1fr);gap:.65rem;min-width:0}
+.portrait>img{position:static;width:100%;height:auto;aspect-ratio:1200/711;object-fit:cover;display:block;background:var(--ink-2);border:1px solid var(--hair)}
+.portrait figcaption{
+  font-weight:500;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--bone-dim);
+}
+
 /* ---------- forms ----------
    Duplicated into retail.css and wholesale.css on purpose, same as .svc and
    .chip: the class names match, the accent does not. Do not lift this into a
