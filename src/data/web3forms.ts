@@ -41,4 +41,4 @@ export const isConfigured = (key: string): boolean =>
  * Flipping this also falsifies a sentence in the privacy policy — see the
  * tripwire table in CLAUDE.md. Change that page in the same commit.
  */
-export const PRO_PLAN = false;
+export const PRO_PLAN = true;

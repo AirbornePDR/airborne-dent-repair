@@ -29,7 +29,9 @@ const FORMS = [
     email: '#w-email', select: {},
     radios: ['input[name=business_type][value="Dealer"]'],
     checks: ['input[name=services][value="Hail damage repair"]','input[name=services][value="XPEL tint"]'] },
-  { url: '/check-in', result: '#checkin-result', btn: 'Send my check-in',
+  // expectUpload: the only form with an attachment field, and only on the Pro
+  // plan. Flip PRO_PLAN back to false and this flips with it.
+  { url: '/check-in', result: '#checkin-result', btn: 'Send my check-in', expectUpload: true,
     fill: {'#c-name':'Sam Okafor','#c-cell':'9725550147','#c-email':'sam@example.com','#c-yearmake':'2019 Ram'},
     email: '#c-email', select: {},
     radios: ['input[value="Yes"][name^="08 Customer"]'], checks: [] },
@@ -45,10 +47,31 @@ async function setup(br, url, responder) {
   // keep the test offline from the real third parties
   await page.route('**js.hcaptcha.com/**', (r) => r.abort());
   await page.route('**web3forms.com/client/**', (r) => r.abort());
-  const state = { calls: 0, body: null };
+  const state = { calls: 0, body: null, files: [] };
   await page.route('https://api.web3forms.com/submit', async (route) => {
     state.calls++;
-    state.body = JSON.parse(route.request().postData() || '{}');
+    const req = route.request();
+    const raw = req.postData() || '';
+    const ct = (req.headers()['content-type'] || '');
+    if (ct.includes('multipart/form-data')) {
+      // The upload form posts multipart, not JSON. Parse it to the same shape so
+      // every payload assertion below keeps working across both encodings —
+      // otherwise enabling upload silently skips those checks.
+      const boundary = (ct.match(/boundary=(.+)$/) || [])[1];
+      const body = {};
+      state.files = [];
+      for (const part of raw.split('--' + boundary)) {
+        const name = (part.match(/name="([^"]+)"/) || [])[1];
+        if (!name) continue;
+        const filename = (part.match(/filename="([^"]*)"/) || [])[1];
+        const value = part.split(/\r?\n\r?\n/).slice(1).join('\n\n').replace(/\r?\n--$/, '').trim();
+        if (filename !== undefined) { state.files.push({ name, filename }); continue; }
+        body[name] = name in body ? body[name] + ', ' + value : value;
+      }
+      state.body = body;
+    } else {
+      state.body = JSON.parse(raw || '{}');
+    }
     await responder(route);
   });
   await page.goto(BASE + url, { waitUntil: 'load' });
@@ -96,7 +119,8 @@ for (const [engine, launcher] of [['CHROMIUM', chromium], ['WEBKIT  ', webkit]])
           btnOk: !!btn && btn.type === 'submit',
           legends: [...f.querySelectorAll('fieldset')].map((x) => !!x.querySelector('legend')),
           action: f.getAttribute('action'), method: (f.getAttribute('method') || '').toUpperCase(),
-          noUpload: f.querySelectorAll('input[type=file]').length === 0,
+          fileInputs: f.querySelectorAll('input[type=file]').length,
+          enctype: f.getAttribute('enctype') || '',
           unconfigured: !!f.querySelector('.w3f-unconfigured') };
       });
       ok(a.unlabelled.length === 0, `${engine} every control has a <label>          ${F.url}`, a.unlabelled.join(','));
@@ -111,7 +135,19 @@ for (const [engine, launcher] of [['CHROMIUM', chromium], ['WEBKIT  ', webkit]])
       if (!a.unconfigured) ok(a.btnOk, `${engine} real keyboard-reachable submit     ${F.url}`);
       ok(a.action === 'https://api.web3forms.com/submit' && a.method === 'POST',
                       `${engine} no-JS action/method intact         ${F.url}`);
-      ok(a.noUpload,  `${engine} no file input (free tier)          ${F.url}`);
+      // Upload is expected on /check-in only, and ONLY when it is wired correctly.
+      // A file input without multipart/form-data silently drops the attachment:
+      // Web3Forms rejects it and the customer is told the form sent fine. That is
+      // the failure this assertion exists to catch, not the presence of the field.
+      if (F.expectUpload) {
+        ok(a.fileInputs === 1,
+                      `${engine} exactly one upload field           ${F.url}`);
+        ok(a.enctype.includes('multipart/form-data'),
+                      `${engine} enctype set, attachment not dropped ${F.url}  [${a.enctype || 'MISSING'}]`);
+      } else {
+        ok(a.fileInputs === 0,
+                      `${engine} no file input, as intended         ${F.url}`);
+      }
 
       if (a.unconfigured) {
         // Key still a placeholder: assert the deliberate "not connected" state
@@ -157,10 +193,25 @@ for (const [engine, launcher] of [['CHROMIUM', chromium], ['WEBKIT  ', webkit]])
     {
       const { ctx, page, state } = await setup(br, F.url, okJson);
       await fillAll(page, F);
+      if (F.expectUpload) {
+        // A real attachment, not a mocked one. The failure this catches is the
+        // attachment being accepted by the page and then quietly dropped on the
+        // way out — the customer is told "Sent." and the photo never existed.
+        await page.setInputFiles('input[type=file]', {
+          name: 'damage.jpg', mimeType: 'image/jpeg',
+          buffer: Buffer.from('\xFF\xD8\xFF\xE0 not a real jpeg, but a real upload', 'latin1'),
+        });
+      }
       await page.locator('form[data-w3f] button[type=submit]').click();
       await page.waitForTimeout(500);
       const r = await readResult(page, F.result);
       ok(state.calls === 1, `${engine} valid submit posts exactly once   ${F.url}`);
+      if (F.expectUpload) {
+        const att = state.files.find((f) => f.name === 'attachment');
+        ok(!!att, `${engine} attachment reached the request    ${F.url}`, att && att.filename);
+        ok(att && att.filename === 'damage.jpg',
+           `${engine} attachment kept its filename      ${F.url}`, att && att.filename);
+      }
       ok(!r.hidden && r.cls.includes('ok') && /Sent\./.test(r.txt), `${engine} success rendered inline            ${F.url}`);
       ok(r.focused, `${engine} focus moved to result message      ${F.url}`);
       ok(page.url().startsWith(BASE), `${engine} stayed on our page, no redirect    ${F.url}`);

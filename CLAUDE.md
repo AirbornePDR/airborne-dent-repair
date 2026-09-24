@@ -392,10 +392,32 @@ successful send:
 > approved. We'll go through everything with you at the shop and you'll sign the
 > repair authorization there. Bring your driver's licence and your insurance card.
 
-**It is not yet in the autoresponder**, because the autoresponder is Pro-only and
-is configured in the Web3Forms dashboard rather than in this repo. When the account
-goes Pro, paste that paragraph into the autoresponder Intro Text for the retail
-form. Nothing in the codebase can do it for you.
+**It is still not in the autoresponder, and no commit can put it there.** The
+account is now on Pro, so the autoresponder is available — but it is configured in
+the Web3Forms dashboard, not in this repo. Someone has to paste it in by hand at
+[app.web3forms.com](https://app.web3forms.com/), under Form Settings → Autoresponder,
+for **the retail key** `a25430ac…0dd2` (which serves both `/contact` and `/check-in`):
+
+> **From name:** Airborne Dent Repair
+> **Subject:** We have your check-in — Airborne Dent Repair
+> **Intro text:** This is a check-in, not an authorization. Nothing is booked and no
+> repair is approved. We'll go through everything with you at the shop and you'll
+> sign the repair authorization there. Bring your driver's licence and your
+> insurance card.
+
+Two things to know before relying on it:
+
+- **One autoresponder per key**, and the retail key serves two forms. That text is
+  written for check-in; anyone submitting the estimate form on `/contact` receives
+  it too. If that reads wrong, the fix is a third Web3Forms key for `/check-in`
+  rather than softening the wording — the sentence is the one thing on that page
+  that has to be unambiguous.
+- Web3Forms' own docs state the autoresponder **does not fire on localhost or some
+  preview environments**. Test it from the live domain or you will conclude it is
+  broken when it is not.
+
+Until it is installed, the paragraph still reaches the customer on-page: twice on
+the form and again in the success message after a successful send.
 
 ## Privacy and terms
 
@@ -415,8 +437,7 @@ that breaks it, not in a follow-up:
 
 | Page | Sentence | Broken by |
 |---|---|---|
-| `/privacy` | "None of the three forms accepts file or photo uploads." | **Setting `PRO_PLAN = true`.** That switches on the photo field on `/check-in`. |
-| `/privacy` | "If we ask you for photographs, we ask you to email them." | The same flag. Both `/check-in` and the other two forms' copy change with it. |
+| `/privacy` | ~~"None of the three forms accepts file or photo uploads."~~ **Tripped and rewritten.** The account went Pro, `PRO_PLAN` is now `true`, and `/check-in` takes one optional photograph. `/privacy` was corrected in the same commit, as this table said it had to be. The sentence now scopes upload to the check-in form only, and the check-in field list names the attachment. | Turning `PRO_PLAN` back off — the sentence would then overstate what the form accepts. |
 | `/privacy` | "Only what you type into a form on this site, and only on the **three** pages that have one." | Adding or removing a form. |
 | `/privacy` | The **three** lists of exact form fields. | Adding, renaming or removing any field on any of the three forms. |
 | `/privacy` | "hCaptcha runs on all **three** forms… loads only on the **three** pages that have a form." | Adding or removing a form. |

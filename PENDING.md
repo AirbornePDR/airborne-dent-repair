@@ -57,9 +57,11 @@ The biggest cluster. Five of the six open questions on the site are on this one 
 Each of these currently renders as an empty hatched panel. The panel holds the
 layout; it no longer says "photo needed" to the visitor.
 
-- [ ] **A real windshield job.** Wanted in three places: the `/windshield-replacement`
-      hero, and the windshield service card on `/services` and `/wholesale`. This is
-      the most-used gap on the site.
+- [ ] **A real windshield job.** Still the most-used gap. The hero on
+      `/windshield-replacement` now carries a stand-in (a vehicle at the shop,
+      captioned as the shop, claiming nothing about glass) so the page no longer
+      reads as broken — swap it the day a real one is shot. Still genuinely empty:
+      the windshield service card on `/`, `/services` and `/wholesale`.
 - [ ] **A windshield before/after pair** — `/windshield-replacement`
 - [ ] **A door ding before/after pair** — `/paintless-dent-repair`
 - [ ] **Service-area map** — home page. A map graphic, not a photograph.
@@ -77,7 +79,12 @@ layout; it no longer says "photo needed" to the visitor.
       by two — it needs a design decision, not a mechanical fix.
 - [ ] Turn off the `WIP_BANNER` in `src/pages/index.astro` at launch
 - [ ] Send one real test submission through each of the three forms and confirm it
-      lands in the right inbox — still the only unproven link in the form chain
+      lands in the right inbox — still the only unproven link in the form chain.
+      Now also attach a photo on `/check-in` and confirm the attachment arrives.
+- [ ] **Install the autoresponder text** in the Web3Forms dashboard for the retail
+      key. Pro is active so the feature exists, but no commit can configure it —
+      see the block in CLAUDE.md under `/check-in` for the exact wording, and the
+      warning that it will not fire from localhost.
 
 ---
 

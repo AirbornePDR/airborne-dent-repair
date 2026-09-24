@@ -18,8 +18,18 @@ import '../styles/retail.css';
       <li>Free estimates</li><li>Veteran owned</li><li>Gunter, TX &middot; serving DFW</li>
     </ul>
   </div>
-  <div class="hero-figure slot">
-    {SHOW_BUILD_NOTES && <span class="slot-tag hero-slot-tag">Photo needed &mdash; real windshield job</span>}
+  <!-- Stand-in, not a claim. There is still no photograph of a real glass job on
+       this site; until there is, this is a vehicle at the shop, captioned as the
+       shop and nothing more. It says nothing about windshields, which is the
+       point — an empty half-screen hero read as a broken page, and substituting a
+       photo that implied glass work would have been worse than either. Swap it the
+       day a real windshield job is shot. -->
+  <div class="hero-figure">
+    <img class="shot-img" src="/img/fleet-g63-low-angle-1200.jpg"
+         srcset="/img/fleet-g63-low-angle-1200.jpg 1200w, /img/fleet-g63-low-angle-2400.jpg 2400w"
+         sizes="(min-width:980px) 42vw, 100vw" width="1200" height="800" fetchpriority="high" decoding="async"
+         alt="A vehicle parked outside the Airborne Dent Repair shop in Gunter, Texas" />
+    <span class="slot-tag hero-slot-tag">489 Reed Ln, Unit 2 &middot; Gunter, Texas</span>
   </div>
 </section>
 <div class="marquee" aria-hidden="true">
