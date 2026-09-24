@@ -401,6 +401,11 @@ const live = isConfigured(CLAIMS_ACCESS_KEY);
       <input type="hidden" name="access_key" value={CLAIMS_ACCESS_KEY} />
       <input type="hidden" name="subject" value="Wholesale / claims inquiry from the website" />
       <input type="hidden" name="from_name" value="Airborne Dent Repair website" />
+      <!-- Claims land in BOTH shop inboxes. The open question "who watches the
+           claims inbox after a storm" is still unanswered, and a lead sitting in
+           an unwatched inbox is the failure this guards against. Pro feature;
+           multiple addresses would be separated with a semicolon. -->
+      <input type="hidden" name="ccemail" value="airbornepdr@gmail.com" />
       <input class="w3f-hp" type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true" />
 
       <div class="w3f-grid two">

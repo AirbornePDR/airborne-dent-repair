@@ -153,6 +153,13 @@ const live = isConfigured(RETAIL_ACCESS_KEY);
       <input type="hidden" name="access_key" value={RETAIL_ACCESS_KEY} />
       <input type="hidden" name="subject" value="Estimate request from the website" />
       <input type="hidden" name="from_name" value="Airborne Dent Repair website" />
+      <!-- A retail estimate that IS an insurance claim is a claim, whichever form
+           it arrived on, so it copies the claims desk too. Filled in by the script
+           only when the radio below says Yes; left empty it is stripped from the
+           payload rather than sent blank. -->
+      <input type="hidden" name="ccemail" value=""
+             data-cc-when="insurance_claim" data-cc-equals="Yes"
+             data-cc-to="Claimsairbornedentrepair@gmail.com" />
       <input class="w3f-hp" type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true" />
 
       <div class="w3f-grid two">

@@ -318,11 +318,23 @@ const BUSINESS = {
         const replyEl = form.querySelector('[data-replyto]');
         const replyto = replyEl && replyEl.value.trim() ? replyEl.value.trim() : '';
 
+        // Conditional CC. A retail estimate that is an insurance claim copies the
+        // claims desk as well. Set before the payload is read so both the JSON and
+        // multipart branches pick it up from the field itself.
+        form.querySelectorAll('[data-cc-when]').forEach((el) => {
+          const picked = form.querySelector(
+            '[name="' + el.getAttribute('data-cc-when') + '"]:checked');
+          const match = picked && picked.value === el.getAttribute('data-cc-equals');
+          el.value = match ? el.getAttribute('data-cc-to') : '';
+        });
+
         let body, headers;
         if (multipart) {
           body = new FormData(form);
           if (subject) body.set('subject', subject);
           if (replyto) body.set('replyto', replyto);
+          // an empty ccemail is worse than none — do not hand Web3Forms a blank
+          if (!body.get('ccemail')) body.delete('ccemail');
           headers = { Accept: 'application/json' }; // let the browser set the boundary
         } else {
           // Duplicate keys (checkbox groups) collapse into one comma-joined value
@@ -333,6 +345,7 @@ const BUSINESS = {
           });
           if (subject) payload.subject = subject;
           if (replyto) payload.replyto = replyto;
+          if (!payload.ccemail) delete payload.ccemail;
           body = JSON.stringify(payload);
           headers = { 'Content-Type': 'application/json', Accept: 'application/json' };
         }

@@ -362,6 +362,33 @@ loads nothing external. The privacy policy says so, and it has to stay true.
 **Do not put deductible copy on these forms** — no "we help with your deductible",
 no "no out of pocket". Still blocked pending the owner's attorney (rule 4).
 
+### Where each form actually lands
+
+Two keys, three forms, and a claim reaches **both** inboxes however it arrived.
+
+| Form | To | CC |
+|---|---|---|
+| `/contact` estimate | `airbornepdr@gmail.com` | claims desk — **only if** the insurance radio says Yes |
+| `/wholesale` claims | `Claimsairbornedentrepair@gmail.com` | `airbornepdr@gmail.com`, always |
+| `/check-in` | `airbornepdr@gmail.com` | none |
+
+The CC exists because **"who watches the claims inbox after a storm" is still
+unanswered**. Until someone is named, a claim landing in one unread mailbox is the
+failure mode; copying both is the cheap guard against it. When that question is
+answered the CC may become unnecessary — it is a workaround, not a design.
+
+`ccemail` is a Web3Forms Pro field; multiple addresses separate with `;`.
+
+The conditional one is driven by `data-cc-when` / `data-cc-equals` / `data-cc-to`
+on a hidden input, resolved in `Base.astro` before the payload is read, so both
+the JSON and multipart branches pick it up. **An empty `ccemail` is deleted rather
+than sent blank.** `verify:forms` asserts all three rows above *and* the negative
+case — a conditional that fires unconditionally looks identical in the happy path
+while quietly copying every retail estimate to the claims desk.
+
+Routing is also named in `/privacy`. Change one, change the other in the same
+commit.
+
 ### `/check-in` specifically
 
 It mirrors the paper **Repair Order / Direction of Payment** so the printed

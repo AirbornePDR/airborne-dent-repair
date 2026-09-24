@@ -23,18 +23,21 @@ const FORMS = [
   { url: '/contact', result: '#estimate-result', btn: 'Send the request',
     fill: {'#r-name':'Jane Doe','#r-phone':'682-555-0134','#r-email':'jane@example.com','#r-vehicle':'2019 Ram 1500'},
     email: '#r-email', select: {'#r-damage':'Hail'},
-    radios: ['input[name=insurance_claim][value="Not sure"]'], checks: [] },
+    radios: ['input[name=insurance_claim][value="Yes"]'], checks: [],
+    expectCc: 'Claimsairbornedentrepair@gmail.com',
+    ccNegative: 'input[name=insurance_claim][value="No"]' },
   { url: '/wholesale', result: '#account-result', btn: 'Send the inquiry',
     fill: {'#w-business':'Gunter Auto Group','#w-contact':'Sam Reyes','#w-phone':'9725550147','#w-email':'sam@example.com','#w-volume':'30'},
     email: '#w-email', select: {},
     radios: ['input[name=business_type][value="Dealer"]'],
-    checks: ['input[name=services][value="Hail damage repair"]','input[name=services][value="XPEL tint"]'] },
+    checks: ['input[name=services][value="Hail damage repair"]','input[name=services][value="XPEL tint"]'],
+    expectCc: 'airbornepdr@gmail.com' },
   // expectUpload: the only form with an attachment field, and only on the Pro
   // plan. Flip PRO_PLAN back to false and this flips with it.
   { url: '/check-in', result: '#checkin-result', btn: 'Send my check-in', expectUpload: true,
     fill: {'#c-name':'Sam Okafor','#c-cell':'9725550147','#c-email':'sam@example.com','#c-yearmake':'2019 Ram'},
     email: '#c-email', select: {},
-    radios: ['input[value="Yes"][name^="08 Customer"]'], checks: [] },
+    radios: ['input[value="Yes"][name^="08 Customer"]'], checks: [], expectCc: undefined },
 ];
 
 const SKIP = new Set(JSON.parse(process.env.SKIP_FORMS || "[]"));
@@ -219,8 +222,29 @@ for (const [engine, launcher] of [['CHROMIUM', chromium], ['WEBKIT  ', webkit]])
       ok(state.body && 'botcheck' in state.body === false, `${engine} unchecked honeypot not submitted   ${F.url}`);
       if (F.checks.length) ok(state.body && state.body.services === 'Hail damage repair, XPEL tint',
         `${engine} checkbox group joined not clobbered ${F.url}`, String(state.body.services));
+      if (F.expectCc !== undefined) {
+        ok(state.body.ccemail === F.expectCc,
+           `${engine} CC routing correct                ${F.url}`,
+           state.body.ccemail === undefined ? 'no cc (correct)' : state.body.ccemail);
+      }
       const cleared = await page.inputValue(Object.keys(F.fill)[0]);
       ok(cleared === '', `${engine} form reset after success          ${F.url}`);
+      await ctx.close();
+    }
+
+    // ---------- conditional CC: the negative case ----------
+    // The retail form copies the claims desk ONLY when the claim radio says Yes.
+    // Worth its own fixture: a conditional that fires unconditionally looks
+    // identical in the happy path and quietly copies every estimate to claims.
+    if (F.ccNegative) {
+      const { ctx, page, state } = await setup(br, F.url, okJson);
+      await fillAll(page, F);
+      await page.check(F.ccNegative);       // "No" instead of "Yes"
+      await page.locator('form[data-w3f] button[type=submit]').click();
+      await page.waitForTimeout(500);
+      ok(state.calls === 1 && !('ccemail' in state.body),
+         `${engine} no CC when not a claim            ${F.url}`,
+         'ccemail' in state.body ? 'LEAKED: ' + state.body.ccemail : 'absent');
       await ctx.close();
     }
 
