@@ -17,40 +17,62 @@ changed. This only stops the reminders being shown to customers.
 
 ---
 
-## Owner questions — 16
+## Owner questions — 18 distinct
 
-### Windshield & glass — `/windshield-replacement`
-The biggest cluster. Five of the six open questions on the site are on this one page.
+Grouped the way the conversation would go, not the way the site is ordered. Two
+questions appear in two places each; answer once and both get filled.
 
-- [ ] Mobile service radius — how far out do you go?
-- [ ] Chip repair offered, or replacement only?
-- [ ] ADAS recalibration — in-house, sublet, or not offered?
-- [ ] Glass sourcing — OEM, OEE, aftermarket?
-- [ ] Are glass claims handled directly with the carrier?
+### Windshield & glass — 5
+Your highest-value service and the one with no photograph anywhere on the site.
 
-### Window tint — `/window-tint`
-- [ ] Which VLT percentages do you offer?
-- [ ] Which XPEL film lines? (they make several at different price points)
-- [ ] Is XPEL paint protection film offered as well as tint?
+1. **Mobile service radius.** How far out do you actually drive? A number here
+   turns "mobile or in-shop" into something a customer in Sherman can act on.
+2. **Chip repair — offered, or replacement only?** People search for chip repair
+   specifically. If you do it, it is a page of its own.
+3. **ADAS recalibration — in-house, sublet, or not offered?** Any car from roughly
+   2018 on needs the camera recalibrated after a windshield. Dealers and carriers
+   will ask, and "we don't know" loses the account.
+4. **Glass sourcing — OEM, OEE, or aftermarket?** Second question every informed
+   customer asks after price.
+5. **Are glass claims handled directly with the carrier?** Most glass work is a
+   zero-or-low-deductible claim. If you bill the carrier directly, that is a
+   selling point and it is currently unsaid.
 
-### Wholesale — `/wholesale`
-- [ ] R&I — in-house or sublet?
-- [ ] Which estimate platforms, and what is the documentation process?
-- [ ] Do you work on-site at customer lots?
-- [ ] Minimum units and pickup radius
-- [ ] Billing terms
-- [ ] Typical turnaround, single unit
-- [ ] Wholesale rate structure
-- [ ] Certificate of insurance — available on request?
+### Wholesale & fleet — 8
+Twelve of the 27 markers were on this page. These are what a dealer asks before
+opening an account.
 
-### Paintless dent repair — `/paintless-dent-repair`
-- [ ] Aluminium panel capability
-- [ ] Conventional repair — in-house or referral?
+6. **R&I — in-house or sublet?** Whether you remove and refit trim and panels.
+7. **Estimate platforms and documentation process.** CCC, Mitchell, Audatex? A body
+   shop needs to know before sending the first car.
+8. **On-site work at customer lots** — will you work at their place, or does
+   everything come to Reed Lane?
+9. **Minimum units and pickup radius.** Pickup and delivery is already advertised;
+   the terms of it are blank.
+10. **Billing terms.** Net 30? On completion? An account cannot open without this.
+11. **Typical turnaround, single unit.**
+12. **Wholesale rate structure.** Matrix, flat, per panel?
+13. **Certificate of insurance — available on request?** Most dealer groups require
+    one before a vendor touches a car. A yes/no.
 
-### Hail — `/hail-damage-repair`
-- [ ] Conventional repair — in-house or referral? (same question, second page)
+### Window tint — 3
+14. **Which VLT percentages do you offer?** Texas regulates front sides; the page
+    says so and then cannot say what you actually stock.
+15. **Which XPEL film lines?** They make several at different price points.
+16. **Is XPEL paint protection film offered as well as tint?** If yes, that is a
+    service with no page at all right now.
 
----
+### Paintless & hail — 2
+17. **Aluminium panel capability.** Aluminium is a different skill and a different
+    price. F-150s and a lot of German metal are aluminium.
+18. **Conventional repair — in-house or referral?** *(asked on two pages)* When a
+    panel is too far gone for paintless, what happens? "We refer you to someone we
+    trust" is a perfectly good answer — silence is not.
+
+### Quick wins
+Several are one word. **13** (COI), **2** (chip repair), **16** (PPF), **3** (ADAS)
+and **18** (referral) are yes/no or a single sentence. **10**, **11** and **12** are
+the ones that need him to actually decide something.
 
 ## Photographs still needed — 4
 
@@ -78,13 +100,9 @@ layout; it no longer says "photo needed" to the visitor.
       leaves one cell showing the grid's hairline background. Five does not divide
       by two — it needs a design decision, not a mechanical fix.
 - [ ] Turn off the `WIP_BANNER` in `src/pages/index.astro` at launch
-- [ ] Send one real test submission through each of the three forms and confirm it
-      lands in the right inbox — still the only unproven link in the form chain.
-      Now also attach a photo on `/check-in` and confirm the attachment arrives.
-- [ ] **Install the autoresponder text** in the Web3Forms dashboard for the retail
-      key. Pro is active so the feature exists, but no commit can configure it —
-      see the block in CLAUDE.md under `/check-in` for the exact wording, and the
-      warning that it will not fire from localhost.
+- [x] ~~Send one real test submission through each of the three forms~~ — DONE,
+      all three confirmed delivering.
+- [x] ~~Install the autoresponder text in the Web3Forms dashboard~~ — DONE.
 
 ---
 
