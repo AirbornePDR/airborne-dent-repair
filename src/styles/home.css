@@ -42,7 +42,7 @@ a{color:inherit}
    One family, worked at two extremes. The display voice is Archivo pushed
    wide and light; the reading voice is Archivo at its normal width. The
    distance between them is the whole typographic idea — no second face,
-   and no second colour. */
+   and no second color. */
 .display{
   font-family:var(--sans);
   font-weight:250;
@@ -311,7 +311,7 @@ section{padding-block:var(--rhythm)}
   -webkit-user-select:none;user-select:none;
   /* pan-y, not none: a vertical swipe that starts on the photo still scrolls the
      page, while a sideways drag is left for the slider instead of being eaten as
-     a scroll gesture. -webkit-tap-highlight-color kills the grey flash iOS paints
+     a scroll gesture. -webkit-tap-highlight-color kills the gray flash iOS paints
      over the image on touch. */
   touch-action:pan-y;-webkit-tap-highlight-color:transparent;
 }

@@ -27,7 +27,7 @@ const live = isConfigured(RETAIL_ACCESS_KEY);
 <section>
   <div class="wrap">
     <div class="w3f-note rv">
-      <p><strong>This is a check-in, not an authorization.</strong> Nothing is booked and no repair is approved. We&rsquo;ll go through everything with you at the shop and you&rsquo;ll sign the repair authorization there. Bring your driver&rsquo;s licence and your insurance card.</p>
+      <p><strong>This is a check-in, not an authorization.</strong> Nothing is booked and no repair is approved. We&rsquo;ll go through everything with you at the shop and you&rsquo;ll sign the repair authorization there. Bring your driver&rsquo;s license and your insurance card.</p>
     </div>
   </div>
 </section>
@@ -37,7 +37,7 @@ const live = isConfigured(RETAIL_ACCESS_KEY);
     <form class="w3f rv" data-w3f data-result="checkin-result"
           data-fallback-email="airbornepdr@gmail.com"
           data-subject="Check-in — {name} — {vehicle}"
-          data-success="Your check-in is with the shop. Nothing is booked by this and no repair is approved — we will go through everything with you at the shop and you will sign the repair authorization there. Bring your driver's licence and your insurance card."
+          data-success="Your check-in is with the shop. Nothing is booked by this and no repair is approved — we will go through everything with you at the shop and you will sign the repair authorization there. Bring your driver's license and your insurance card."
           action="https://api.web3forms.com/submit" method="POST"
           enctype={PRO_PLAN ? 'multipart/form-data' : undefined} novalidate>
       <input type="hidden" name="access_key" value={RETAIL_ACCESS_KEY} />
@@ -198,7 +198,7 @@ const live = isConfigured(RETAIL_ACCESS_KEY);
 
       <div class="w3f-actions">
         <div class="w3f-note w3f-note-tight">
-          <p><strong>This is a check-in, not an authorization.</strong> Nothing is booked and no repair is approved. We&rsquo;ll go through everything with you at the shop and you&rsquo;ll sign the repair authorization there. Bring your driver&rsquo;s licence and your insurance card.</p>
+          <p><strong>This is a check-in, not an authorization.</strong> Nothing is booked and no repair is approved. We&rsquo;ll go through everything with you at the shop and you&rsquo;ll sign the repair authorization there. Bring your driver&rsquo;s license and your insurance card.</p>
         </div>
         {live
           ? <button class="btn btn-solid" type="submit">Send my check-in <span aria-hidden="true">&rarr;</span></button>
@@ -208,7 +208,7 @@ const live = isConfigured(RETAIL_ACCESS_KEY);
         <p class="w3f-legal">
           We use what you send here to prepare your paperwork and carry out the work, nothing else.
           See our <a href="/privacy">privacy policy</a> and <a href="/terms">terms</a>.
-          We never ask for your driver&rsquo;s licence number, date of birth, VIN, policy number or
+          We never ask for your driver&rsquo;s license number, date of birth, VIN, policy number or
           card details on this website &mdash; those are handled in person at the shop.
         </p>
       </div>

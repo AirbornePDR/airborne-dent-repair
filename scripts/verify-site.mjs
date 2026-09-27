@@ -37,9 +37,9 @@ const PAGES = ['/', '/services', '/wholesale', '/about', '/contact', '/check-in'
 // Word-bounded on purpose — a bare /vin/ would fire on "moving" and "driving".
 const FORBIDDEN = [
   [/\bvin\b|vehicle identification/i, 'VIN'],
-  [/\b(licence|license)\s*plate\b|\bplate\s*(no|number|#)/i, 'License Plate'],
+  [/\b(licence|license)\s*plate\b|\bplate\s*(no|number|#)/i, 'License Plate'],  // detector must match both spellings — us-english-exempt
   [/\bpolicy\s*(no|number|#)|\bpolicy#/i, 'Policy number'],
-  [/\bdriver'?s?\s*(licence|license)\b|\bdl\s*(no|number|#)/i, "Driver's License"],
+  [/\bdriver'?s?\s*(licence|license)\b|\bdl\s*(no|number|#)/i, "Driver's License"],  // detector must match both spellings — us-english-exempt
   [/\bbirth\s*date\b|\bdate\s*of\s*birth\b|\bdob\b|\bbirthdate\b/i, 'Birth date'],
   [/\bcard\s*(no|number|#)|\bcredit\s*card\b|\bcc\s*(no|number)\b/i, 'Card number'],
   [/\bexpir(y|ation)\b|\bexp\s*(date|\.|:)/i, 'Card expiry'],
@@ -151,6 +151,92 @@ const browser = await chromium.launch({ args: ['--autoplay-policy=no-user-gestur
     await pg.close();
   }
   await ctx.close();
+}
+
+// --------------------------------------------------------- US English only
+// Rule 6. This is a Texas shop. A British-spelling pass has had to be reverted
+// twice now, and the second time it reached the live site — including the British
+// spelling of "license" in the one sentence on /check-in whose whole job is to
+// tell a customer what to bring, and again inside the list of things the site
+// promises never to collect.
+//
+// Checked in two places, because they fail differently. Rendered page text is
+// what a customer reads. Source and docs are where the next person copies from —
+// a British spelling surviving in CLAUDE.md gets propagated by whoever writes the
+// next page.
+//
+// Rendered text includes alt and aria-label, which is not pedantry: the pass that
+// added this check found the British spelling of "gray" sitting in aria-label on
+// six pages, where a screen reader says it out loud and image search indexes it,
+// and where a check that only stripped tags could not see it.
+//
+// A line carrying the marker is skipped. Two things legitimately need both
+// spellings — the word list below, and the forbidden-field patterns above, since
+// a form field labelled with either spelling still has to be caught. Comments
+// should describe the word rather than spell it, as this one does.
+{
+  const OPT_OUT = 'us-english-exempt';
+  const BRITISH = [                                             // us-english-exempt
+    'licence', 'aluminium', 'colour', 'enquir', 'travelling', 'organisation',   // us-english-exempt
+    'authorise', 'recognise', 'whilst', 'centred', 'defence', 'favourite',      // us-english-exempt
+    'catalogue', 'metre', 'litre', 'programme', 'cheque', 'grey',               // us-english-exempt
+  ];                                                            // us-english-exempt
+  const RE = new RegExp('\\b(' + BRITISH.join('|') + ')', 'gi');
+
+  const collect = (dir, pred) => {
+    const out = [];
+    const walk = (d) => {
+      for (const e of fs.readdirSync(d, { withFileTypes: true })) {
+        if (e.name === 'node_modules' || e.name === '.git' || e.name === 'dist') continue;
+        const p = path.join(d, e.name);
+        if (e.isDirectory()) walk(p);
+        else if (pred(e.name)) out.push(p);
+      }
+    };
+    walk(dir);
+    return out;
+  };
+
+  // 1. what a visitor actually reads
+  const pages = [];
+  const walkDist = (d) => {
+    for (const e of fs.readdirSync(d, { withFileTypes: true })) {
+      const p = path.join(d, e.name);
+      if (e.isDirectory()) walkDist(p);
+      else if (e.name.endsWith('.html')) pages.push(p);
+    }
+  };
+  walkDist('dist');
+  for (const f of pages) {
+    const html = fs.readFileSync(f, 'utf8')
+      .replace(/<script[\s\S]*?<\/script>/g, '')
+      .replace(/<style[\s\S]*?<\/style>/g, '');
+    // visible text, plus the attributes a screen reader reads aloud
+    const spoken = [...html.matchAll(/\b(?:alt|aria-label|title)="([^"]*)"/gi)]
+      .map((m) => m[1]).join(' ');
+    const text = html.replace(/<[^>]+>/g, ' ') + ' ' + spoken;
+    const hits = [...new Set(text.match(RE) || [])];
+    ok(hits.length === 0, `US English in rendered text  ${f}`, hits.join(', '));
+  }
+
+  // 2. our own source and docs, where the next page gets copied from.
+  // package-lock.json is excluded: some @img/* dependencies carry the British
+  // spelling of "color" in their actual package names, which is not ours to fix.
+  const sources = [
+    ...collect('src', (n) => /\.(astro|css|ts|js|mjs)$/.test(n)),
+    ...collect('scripts', (n) => /\.mjs$/.test(n)),
+    ...collect('.', (n) => /^(CLAUDE|README|PENDING|MEDIA-MAP|START-HERE|ATTORNEY-REVIEW)\.md$/.test(n)),
+  ];
+  for (const f of sources) {
+    const lines = fs.readFileSync(f, 'utf8').split('\n');
+    const hits = [];
+    lines.forEach((line, i) => {
+      if (line.includes(OPT_OUT)) return;
+      const m = line.match(RE);
+      if (m) hits.push(`${i + 1}: ${[...new Set(m)].join(', ')}`);
+    });
+    ok(hits.length === 0, `US English in source        ${f}`, hits.slice(0, 3).join(' | '));
+  }
 }
 
 // ------------------------------------------------- words fused to inline tags

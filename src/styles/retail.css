@@ -94,7 +94,7 @@ a{color:inherit}
   white-space:normal;text-wrap:balance;
 }
 .chip.blocked{color:#E0785A;border-color:rgba(224,120,90,.42)}
-/* the marker sits on the first line, not centred against a wrapped block */
+/* the marker sits on the first line, not centered against a wrapped block */
 .chip::before{content:"";width:4px;height:4px;background:currentColor;
   flex:0 0 4px;align-self:flex-start;margin-top:.45em}
 
@@ -148,7 +148,7 @@ section{padding-block:var(--rhythm)}
    cap, not a tighter ratio, is what keeps the crop off the subject. */
 .band{position:relative;overflow:hidden;aspect-ratio:3/2;border-block:1px solid var(--hair)}
 @media(min-width:820px){.band{aspect-ratio:21/9;max-height:min(72svh,620px)}}
-/* bias the crop above centre where the bottom of the frame is only ground */
+/* bias the crop above center where the bottom of the frame is only ground */
 .band-high .shot-img,.band-high .media-video{object-position:50% 38%}
 .band-cap{position:absolute;z-index:2;left:0;bottom:0;right:0;
   padding:3rem clamp(1.25rem,4.5vw,4.5rem) 1rem;
@@ -283,7 +283,7 @@ section{padding-block:var(--rhythm)}
   -webkit-user-select:none;user-select:none;
   /* pan-y, not none: a vertical swipe that starts on the photo still scrolls the
      page, while a sideways drag is left for the slider instead of being eaten as
-     a scroll gesture. -webkit-tap-highlight-color kills the grey flash iOS paints
+     a scroll gesture. -webkit-tap-highlight-color kills the gray flash iOS paints
      over the image on touch. */
   touch-action:pan-y;-webkit-tap-highlight-color:transparent;
 }

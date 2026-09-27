@@ -53,7 +53,7 @@ privacy policy short.
 Two implementation details that are easy to get wrong:
 
 - Use `format("woff2")`. `format("woff2-variations")` is interim syntax that never
-  made the spec; engines that do not recognise it skip the source silently.
+  made the spec; engines that do not recognize it skip the source silently.
 - The preload **must** carry `crossorigin`, even though the file is same-origin.
   Fonts are always fetched in anonymous CORS mode; without it the preload does not
   match the real request and the file downloads twice.
@@ -113,7 +113,7 @@ These come from the client brief. They are not style preferences.
    as the other business agreeing to be listed on a website — he cannot give that
    consent on their behalf. Until they have agreed, describe the relationship
    generically ("a partner rental provider") and keep the named version in
-   `WITHHELD-COPY.md`, which is gitignored. **A `[CONFIRM]` chip is not a licence
+   `WITHHELD-COPY.md`, which is gitignored. **A `[CONFIRM]` chip is not a license
    to publish the thing being confirmed.** The chip belongs on the withheld version;
    the published page ships the generic wording. This rule was written after the
    partner's name went live with a chip attached to it, which published the name and
@@ -168,7 +168,7 @@ in-house** — referred out, and the shop has names it recommends.
 *Paintless & hail* — **all metal types including aluminum**; aluminum takes longer and
 costs more, and that difference is written into the estimate. **Conventional repair is
 handled at a second location of the shop's that does the paint work**, identified and
-discussed with the customer before drop-off so they know the car is travelling.
+discussed with the customer before drop-off so they know the car is traveling.
 
 **One clause from his answers is deliberately NOT published.** On aluminum he added:
 *"if being utilized through the insurance carrier, the insurance is the ones to pay
@@ -451,7 +451,7 @@ successful send:
 
 > This is a check-in, not an authorization. Nothing is booked and no repair is
 > approved. We'll go through everything with you at the shop and you'll sign the
-> repair authorization there. Bring your driver's licence and your insurance card.
+> repair authorization there. Bring your driver's license and your insurance card.
 
 **It is still not in the autoresponder, and no commit can put it there.** The
 account is now on Pro, so the autoresponder is available — but it is configured in
@@ -463,7 +463,7 @@ for **the retail key** `a25430ac…0dd2` (which serves both `/contact` and `/che
 > **Subject:** We have your check-in — Airborne Dent Repair
 > **Intro text:** This is a check-in, not an authorization. Nothing is booked and no
 > repair is approved. We'll go through everything with you at the shop and you'll
-> sign the repair authorization there. Bring your driver's licence and your
+> sign the repair authorization there. Bring your driver's license and your
 > insurance card.
 
 Two things to know before relying on it:
@@ -511,7 +511,7 @@ two published sentences false. Change `/privacy` in the same commit as the flag.
 
 ## Fields this site must never collect
 
-Driver's licence numbers, dates of birth, VINs, licence plate numbers, insurance
+Driver's license numbers, dates of birth, VINs, license plate numbers, insurance
 policy numbers, card numbers, expiry dates, security codes, signatures. Also the
 shop-assigned fields: Repair Order #, Estimate Date, Representative.
 
@@ -573,6 +573,18 @@ right.** Test on the device.
   Pick inputs that probe the boundary the code actually draws: the character class,
   the empty string, the duplicate key, the value that snaps to the step. A fixture
   that only demonstrates the happy path is decoration.
+- **US English, and it is now enforced.** Rule 6 has been violated twice, the
+  second time reaching the live site. `npm run verify:site` fails on 18 British
+  spellings in two places: rendered page text **including `alt`, `aria-label` and
+  `title`**, and our own source and docs. The attribute check matters — the pass
+  that added this found the British spelling of "gray" in `aria-label` on six
+  pages, said aloud by screen readers and indexed by image search, invisible to a
+  check that only stripped tags. Source and docs are checked because that is where
+  the next page gets copied from. A line needing both spellings carries
+  `us-english-exempt`; only the word list and the forbidden-field patterns should
+  ever use it, and comments should describe a word rather than spell it.
+  `package-lock.json` is excluded — some dependency names genuinely carry the
+  British spelling.
 - **Escapes do not survive being written through a generator script.** Both times a
   backslash has gone missing in this project, it was because the edit was applied by
   a throwaway Node script that built the replacement in a template literal. Edit
