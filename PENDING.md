@@ -31,12 +31,12 @@ pocket", which rule 4 blocks pending his attorney. The site says aluminum costs 
 and the difference is written into the estimate, which is true without promising who
 absorbs it. **Needs the attorney before it goes any further.**
 
-**Two answers are worth new pages, not just filled blanks:**
-
-- [ ] **Chip repair is NOT offered** — replacement only. That is now stated plainly
-      on `/windshield-replacement`. Worth knowing for ad spend: do not bid on chip
-      repair terms.
-- [ ] **PPF and vinyl are NOT offered** — referred out. Same note.
+**Two services are deliberately unmentioned.** Chip/crack repair and PPF/vinyl are
+not offered, and at the owner's direction the site does not discuss them at all
+rather than explaining their absence. Practical consequences: do not bid on chip
+repair or PPF search terms, and expect the occasional phone call asking, since the
+site no longer heads it off. Re-add a line either place if those calls become a
+nuisance.
 
 ## Photographs still needed — 4
 
