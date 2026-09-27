@@ -19,3 +19,8 @@ WITHHELD-COPY.md
 # Scratch output folder, not project structure. An unreviewed owner photo landed
 # here once and was one `git add -A` away from a public repo.
 Claude outputs/
+
+# Client legal-review package. This repo is PUBLIC. A document listing what has
+# not yet been reviewed by an attorney is not something to publish on the client's
+# behalf — hand it over directly instead.
+ATTORNEY-REVIEW.md
