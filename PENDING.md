@@ -17,62 +17,26 @@ changed. This only stops the reminders being shown to customers.
 
 ---
 
-## Owner questions — 18 distinct
+## Owner questions — ALL 18 ANSWERED
 
-Grouped the way the conversation would go, not the way the site is ordered. Two
-questions appear in two places each; answer once and both get filled.
+Owner-confirmed 26 September 2026 and written into the pages. Every `Confirm:` chip
+is gone from the source. The answers now live in CLAUDE.md under *Verified facts*,
+which is where anything writing new copy should read them from.
 
-### Windshield & glass — 5
-Your highest-value service and the one with no photograph anywhere on the site.
+**One clause was deliberately withheld.** On aluminum he added *"if being utilized
+through the insurance carrier, the insurance is the ones to pay the difference not
+the insured."* That promises what a third party will pay — it varies by policy and
+carrier, the shop does not control it, and it sits a short step from "no out of
+pocket", which rule 4 blocks pending his attorney. The site says aluminum costs more
+and the difference is written into the estimate, which is true without promising who
+absorbs it. **Needs the attorney before it goes any further.**
 
-1. **Mobile service radius.** How far out do you actually drive? A number here
-   turns "mobile or in-shop" into something a customer in Sherman can act on.
-2. **Chip repair — offered, or replacement only?** People search for chip repair
-   specifically. If you do it, it is a page of its own.
-3. **ADAS recalibration — in-house, sublet, or not offered?** Any car from roughly
-   2018 on needs the camera recalibrated after a windshield. Dealers and carriers
-   will ask, and "we don't know" loses the account.
-4. **Glass sourcing — OEM, OEE, or aftermarket?** Second question every informed
-   customer asks after price.
-5. **Are glass claims handled directly with the carrier?** Most glass work is a
-   zero-or-low-deductible claim. If you bill the carrier directly, that is a
-   selling point and it is currently unsaid.
+**Two answers are worth new pages, not just filled blanks:**
 
-### Wholesale & fleet — 8
-Twelve of the 27 markers were on this page. These are what a dealer asks before
-opening an account.
-
-6. **R&I — in-house or sublet?** Whether you remove and refit trim and panels.
-7. **Estimate platforms and documentation process.** CCC, Mitchell, Audatex? A body
-   shop needs to know before sending the first car.
-8. **On-site work at customer lots** — will you work at their place, or does
-   everything come to Reed Lane?
-9. **Minimum units and pickup radius.** Pickup and delivery is already advertised;
-   the terms of it are blank.
-10. **Billing terms.** Net 30? On completion? An account cannot open without this.
-11. **Typical turnaround, single unit.**
-12. **Wholesale rate structure.** Matrix, flat, per panel?
-13. **Certificate of insurance — available on request?** Most dealer groups require
-    one before a vendor touches a car. A yes/no.
-
-### Window tint — 3
-14. **Which VLT percentages do you offer?** Texas regulates front sides; the page
-    says so and then cannot say what you actually stock.
-15. **Which XPEL film lines?** They make several at different price points.
-16. **Is XPEL paint protection film offered as well as tint?** If yes, that is a
-    service with no page at all right now.
-
-### Paintless & hail — 2
-17. **Aluminium panel capability.** Aluminium is a different skill and a different
-    price. F-150s and a lot of German metal are aluminium.
-18. **Conventional repair — in-house or referral?** *(asked on two pages)* When a
-    panel is too far gone for paintless, what happens? "We refer you to someone we
-    trust" is a perfectly good answer — silence is not.
-
-### Quick wins
-Several are one word. **13** (COI), **2** (chip repair), **16** (PPF), **3** (ADAS)
-and **18** (referral) are yes/no or a single sentence. **10**, **11** and **12** are
-the ones that need him to actually decide something.
+- [ ] **Chip repair is NOT offered** — replacement only. That is now stated plainly
+      on `/windshield-replacement`. Worth knowing for ad spend: do not bid on chip
+      repair terms.
+- [ ] **PPF and vinyl are NOT offered** — referred out. Same note.
 
 ## Photographs still needed — 4
 

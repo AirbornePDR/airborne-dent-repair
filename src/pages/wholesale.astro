@@ -101,8 +101,8 @@ const live = isConfigured(CLAIMS_ACCESS_KEY);
     <p class="n">02</p>
     <h3>Body &amp; Collision Shops</h3>
     <p>Paintless work sublet out so your booth stays on paint. We work to your estimate and your
-      cycle time, not ours.</p>
-    {SHOW_BUILD_NOTES && <span class="chip blocked">Confirm: R&amp;I in-house or sublet</span>}
+      cycle time, not ours. R&amp;I is handled in-house &mdash; we do not sublet it back out, so a
+      panel does not gain a third party on its way through.</p>
   </div>
   <div class="who rv rv-d2">
     <p class="n">03</p>
@@ -120,15 +120,15 @@ const live = isConfigured(CLAIMS_ACCESS_KEY);
     <p class="n">05</p>
     <h3>Insurance &amp; Claims</h3>
     <p>Estimates arrive documented and photographed per unit, so a file can be worked without a
-      call back to the shop for the detail that was missing.</p>
-    {SHOW_BUILD_NOTES && <span class="chip blocked">Confirm: estimate platforms &amp; documentation process</span>}
+      call back to the shop for the detail that was missing.
+      Estimates are written in <strong>CCC</strong>.</p>
   </div>
   <div class="who rv rv-d2">
     <p class="n">06</p>
     <h3>Employers &amp; Property Managers</h3>
     <p>A storm crosses your parking lot and suddenly thirty employee vehicles are damaged.
-      That is one conversation with us, not thirty.</p>
-    {SHOW_BUILD_NOTES && <span class="chip blocked">Confirm: on-site work at customer lots</span>}
+      That is one conversation with us, not thirty. We work on site or at the shop, whichever
+      moves the vehicles faster for you.</p>
   </div>
 </div>
 
@@ -204,8 +204,8 @@ const live = isConfigured(CLAIMS_ACCESS_KEY);
     <p class="n">03</p>
     <h3>We Pick Up</h3>
     <p>Pickup and delivery are part of the account. Nobody on your team spends a morning
-      shuttling cars.</p>
-    {SHOW_BUILD_NOTES && <span class="chip blocked">Confirm: minimum units &amp; pickup radius</span>}
+      shuttling cars. <strong>No minimum unit count</strong> &mdash; one car is worth collecting,
+      and so is a row of them.</p>
   </div>
   <div class="step rv rv-d3">
     <p class="n">04</p>
@@ -216,8 +216,8 @@ const live = isConfigured(CLAIMS_ACCESS_KEY);
   <div class="step rv rv-d3">
     <p class="n">05</p>
     <h3>We Deliver Back</h3>
-    <p>Vehicles return to your lot with per-unit photo documentation and the invoice.</p>
-    {SHOW_BUILD_NOTES && <span class="chip blocked">Confirm: billing terms</span>}
+    <p>Vehicles return to your lot with per-unit photo documentation and the invoice.
+      Billing runs on a <strong>Net 30</strong> cycle.</p>
   </div>
 </div>
 
@@ -253,20 +253,23 @@ const live = isConfigured(CLAIMS_ACCESS_KEY);
         <div><dt>Working capacity</dt><dd>Up to 25 vehicles / week</dd></div>
         <div><dt>Estimates</dt><dd>Free, every unit</dd></div>
         <div><dt>Turnaround</dt><dd>Quoted with your estimate</dd></div>
-        {SHOW_BUILD_NOTES && <div><dt>Typical turnaround, single unit</dt><dd class="pending">Confirm</dd></div>}
+        <div><dt>Estimate platform</dt><dd>CCC</dd></div>
+        <div><dt>R&amp;I</dt><dd>In-house, not sublet</dd></div>
+        <div><dt>Where we work</dt><dd>On site or at the shop</dd></div>
+        <div><dt>Typical turnaround, single unit</dt><dd>A few hours to 1&ndash;3 days, by severity</dd></div>
         <div><dt>Pickup &amp; delivery</dt><dd>Offered</dd></div>
-        {SHOW_BUILD_NOTES && <div><dt>Minimum units for pickup</dt><dd class="pending">Confirm</dd></div>}
+        <div><dt>Minimum units for pickup</dt><dd>None</dd></div>
         <div><dt>PDR warranty</dt><dd>Lifetime</dd></div>
         <div><dt>Tint warranty</dt><dd>XPEL manufacturer's</dd></div>
         <div><dt>Windshield service</dt><dd>Mobile &amp; in-shop</dd></div>
-        {SHOW_BUILD_NOTES && <div><dt>Wholesale rate structure</dt><dd class="pending">Confirm</dd></div>}
-        {SHOW_BUILD_NOTES && <div><dt>Billing terms</dt><dd class="pending">Confirm</dd></div>}
-        {SHOW_BUILD_NOTES && <div><dt>Certificate of insurance</dt><dd class="pending">Confirm</dd></div>}
+        <div><dt>Wholesale rate structure</dt><dd>Flat rate</dd></div>
+        <div><dt>Billing terms</dt><dd>Net 30</dd></div>
+        <div><dt>Certificate of insurance</dt><dd>Available on request</dd></div>
       </dl>
-      {SHOW_BUILD_NOTES && <p class="hint" style="font-size:.76rem;color:#7C8173;margin-top:.9rem">
-        Rows marked <em>Confirm</em> are deliberately unwritten. They are answers only the owner
-        can give, and a guess here is worse than a blank.
-      </p>}
+      <p class="hint" style="font-size:.76rem;color:#7C8173;margin-top:.9rem">
+        Every row above is answered. Rates are quoted per job against the estimate, not from
+        a list &mdash; call and we will walk you through what your volume looks like.
+      </p>
     </div>
   </div>
 </section>

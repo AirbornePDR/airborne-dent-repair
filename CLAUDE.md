@@ -144,6 +144,40 @@ These come from the client brief. They are not style preferences.
   (Airborne), Alaska, dates as written. The DD-214 question is closed.
 - Reach: HQ in Gunter, regular service across greater DFW and North Texas, plus
   catastrophe response deployed nationally to severe hail events.
+
+**The 18 open questions are answered.** Owner-confirmed, 26 September 2026. Every
+`Confirm:` chip is gone from the source — what follows is now verified fact:
+
+*Windshield & glass* — **No travel charge within 50 miles of the shop**, covering DFW
+and bordering cities; beyond that a travel charge may apply, quoted on a call.
+**Replacement only — no chip or crack repair.** ADAS recalibration is **sublet to a
+dedicated calibration company**. Glass fitted is OEM, OEE or aftermarket; on a claim
+the carrier decides which the policy pays for and **typically specifies aftermarket**
+unless stated otherwise. Once a claim is filed the shop sends the carrier whatever
+correspondence and documentation it needs.
+
+*Wholesale* — **R&I in-house, never sublet.** Estimates written in **CCC**. Works
+**on site or at the shop**. **No minimum unit count** for pickup and delivery.
+**Net 30.** **Flat rate**, quoted per job against the estimate. Turnaround **a few
+hours to 1–3 days for a single unit, by severity**. **COI available on request.**
+
+*Tint* — **stocks and installs every VLT percentage.** Three XPEL lines: **XR** and
+**XR Plus** (nano-ceramic) and **CS** (color-stable carbon). **No PPF or vinyl
+in-house** — referred out, and the shop has names it recommends.
+
+*Paintless & hail* — **all metal types including aluminum**; aluminum takes longer and
+costs more, and that difference is written into the estimate. **Conventional repair is
+handled at a second location of the shop's that does the paint work**, identified and
+discussed with the customer before drop-off so they know the car is travelling.
+
+**One clause from his answers is deliberately NOT published.** On aluminum he added:
+*"if being utilized through the insurance carrier, the insurance is the ones to pay
+the difference not the insured."* That is a promise about what a third party will pay,
+it varies by policy and carrier, the shop does not control it, and it reads a short
+step from "no out of pocket" — which rule 4 blocks pending his attorney. The site says
+aluminum costs more and that the difference appears in the estimate, which is true
+without promising who absorbs it. **Do not add the clause without the attorney sign-off
+that rule 4 requires.**
 - Phone 682-226-0543 · Fax 833-907-5267
 - Retail email `airbornepdr@gmail.com` · Claims `Claimsairbornedentrepair@gmail.com`
 - Hours Mon–Sat 9–7, closed Sunday.
